@@ -23,8 +23,8 @@ ENTRY(__cs3_reset)
 MEMORY
 {
   rom (rx) : ORIGIN = 0x00000000, LENGTH = 1048576
-  ram (rwx) : ORIGIN = 0x20000000, LENGTH = 131072
-}
+  ram (rwx) : ORIGIN = 0x20000000, LENGTH = 32768 /*32768 hver block 32kB*/
+  }
 
 /* These force the linker to search for particular symbols from
  * the start of the link process and thus ensure the user's

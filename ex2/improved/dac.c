@@ -9,7 +9,7 @@ void setupDAC()
 
 	 *CMU_HFPERCLKEN0 |= CMU2_HFPERCLKEN0_DAC0; // enable DAC clock
 	 *DAC0_CTRL = 0x50010; // prescale DAC clock
-	 activateDAC();
+	 //activateDAC(); Don't need these from the start
 }
 
 //Why have DAC on when we're not using it?

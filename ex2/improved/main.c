@@ -16,6 +16,7 @@ void setupNVIC();
 
 int main(void)
 {
+	*EMU_MEMCTRL = 0x7; //Deactivate RAM blocks 1, 2 and 3, reduce RAM space in .ld 
 
 	setupGPIO();
 	setupDAC();
