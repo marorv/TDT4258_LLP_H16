@@ -40,11 +40,7 @@ void GPIO_Handler()
 		*SCR = 0x2;
 		activateDAC();
 	
-	} else {
-		//stopTimer();
-		//*SCR = 0x6;
-		//deactivateDAC();
-	}
+	} 
 
 	selectSong(buttons_pressed);
 	*GPIO_PA_DOUT = buttons_pressed;	

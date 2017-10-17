@@ -56,29 +56,20 @@ void selectSong(uint16_t buttons_pressed)
 {
 	switch(buttons_pressed)
 	{
-		case BUTTON_1:
-			//*SCR = 0x2;		
+		case BUTTON_1:	
 			initializeSong(startup_song_pointer);
-			//startTimer();
-			//activateDAC();
 			break;
 
 		case BUTTON_2:
-			//*SCR = 0x2;	
 			initializeSong(got_song_pointer);
-			//startTimer();
 			break;
 
 		case BUTTON_3:
-			//*SCR = 0x2;	
 			initializeSong(still_alive_song_pointer);
-			//startTimer();
 			break;
 
 		case BUTTON_4:
-			//*SCR = 0x2;	
 			initializeSong(lisa_song_pointer);
-			//startTimer();
 			break;
 
 		default:
