@@ -25,44 +25,6 @@ void __attribute__ ((interrupt)) TIMER1_IRQHandler()
 		
 }
 
-/*
- * GPIO even pin interrupt handler 
- */
-void __attribute__ ((interrupt)) GPIO_EVEN_IRQHandler()
-{
-	/*
-	 * TODO handle button pressed event, remember to clear pending
-	 * interrupt 
-	 */
-
-	GPIO_Handler();
-}
-
-/*
- * GPIO odd pin interrupt handler 
- */
-void __attribute__ ((interrupt)) GPIO_ODD_IRQHandler()
-{
-	/*
-	 * TODO handle button pressed event, remember to clear pending
-	 * interrupt 
-	 */
-
-	GPIO_Handler();
-}
-
-void GPIO_Handler()
-{
-	*GPIO_IFC = *GPIO_IF;
-
-	//uint16_t buttons_pressed = *GPIO_PC_DIN << 8;
-
-	//*GPIO_PA_DOUT = buttons_pressed;
-
-	//selectSong(buttons_pressed);
-
-}
-
 void startTimer()
 {
 		*TIMER1_CMD = 0x01; //start timer
