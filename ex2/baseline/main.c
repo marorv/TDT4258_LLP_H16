@@ -36,14 +36,20 @@ int main(void)
 	start_song = 0;
 	makeSongs();
 
+	uint16_t buttons_pressed;
+
 	/*
 	 * Enable interrupt handling 
 	*/
-
+	
+	//selectSong(buttons_pressed);
 	
 	while (1)
 	{	
-
+		buttons_pressed = *GPIO_PC_DIN << 8;
+		*GPIO_PA_DOUT = buttons_pressed;
+		selectSong(buttons_pressed);
+		if(start_song) playSong();
 	}
 
 
