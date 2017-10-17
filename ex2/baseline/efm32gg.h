@@ -1,3 +1,6 @@
+#ifndef _EFM_32GG_H
+#define _EFM32_GG_H
+
 #include <stdint.h>
 
 // GPIO
@@ -41,7 +44,17 @@
 #define GPIO_EXTIRISE  ((volatile uint32_t*)(GPIO_PA_BASE + 0x108))
 #define GPIO_EXTIFALL  ((volatile uint32_t*)(GPIO_PA_BASE + 0x10c))
 #define GPIO_IEN       ((volatile uint32_t*)(GPIO_PA_BASE + 0x110))
+#define GPIO_IF       ((volatile uint32_t*)(GPIO_PA_BASE + 0x114))
 #define GPIO_IFC       ((volatile uint32_t*)(GPIO_PA_BASE + 0x11c))
+
+#define BUTTON_1 0xFE00
+#define BUTTON_2 0xFD00
+#define BUTTON_3 0xFB00
+#define BUTTON_4 0xF700
+#define BUTTON_5 0xEF00
+#define BUTTON_6 0xDF00
+#define BUTTON_7 0xBF00
+#define BUTTON_8 0x7F00
 
 // CMU
 
@@ -63,11 +76,16 @@
 
 #define TIMER1_BASE 0x40010400
 
+#define TIMER1_CTRL ((volatile uint32_t*)(TIMER1_BASE + 0x0))
 #define TIMER1_CMD ((volatile uint32_t*)(TIMER1_BASE + 0x04))
+#define TIMER1_STS ((volatile uint32_t*)(TIMER1_BASE + 0x08))
 #define TIMER1_IEN ((volatile uint32_t*)(TIMER1_BASE + 0x0c))
 #define TIMER1_IFC ((volatile uint32_t*)(TIMER1_BASE + 0x18))
 #define TIMER1_TOP ((volatile uint32_t*)(TIMER1_BASE + 0x1c))
 #define TIMER1_CNT ((volatile uint32_t*)(TIMER1_BASE + 0x24))
+#define TIMER1_CC1_CTRL ((volatile uint32_t*)(TIMER1_BASE + 0x030))
+
+
 
 // NVIC
 
@@ -140,3 +158,5 @@
 #define SCR          ((volatile uint32_t*)0xe000ed10)
 #define SYSTICK_CTRL ((volatile uint32_t*)0xe000e010)
 #define SYSTICK_LOAD ((volatile uint32_t*)0xe000e014)
+
+#endif
