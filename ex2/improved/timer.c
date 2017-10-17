@@ -18,12 +18,12 @@ void setupTimer(uint16_t period)
 
 void startTimer()
 {
-		*TIMER1_CMD = 0x01; //start timer
+	*TIMER1_CMD = 0x01; //start timer
 }
 
 void stopTimer()
 {
-		*TIMER1_CMD = 0x02; //stop timer
+	*TIMER1_CMD = 0x02; //stop timer
 }
 
 

@@ -26,6 +26,8 @@ int main(void)
 
 	//Deepsleep when nothing done
 	*SCR = 0x6;
+	//Waiting for interrupt
+	__asm("wfi");
 
 }
 

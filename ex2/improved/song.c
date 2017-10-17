@@ -44,9 +44,10 @@ void playSong()
 		if(tone_indice > sizeof(current_song_pointer->tone_samples)-1) 
 		{
 			stopTimer();
-			*SCR = 0x6;
 			start_song = 0;
 			tone_indice = 0;
+			*SCR = 0x6;
+			__asm("wfi"); //Back to sleep mode
 		}
 	}
 }
