@@ -63,15 +63,3 @@ void GPIO_Handler()
 	selectSong(buttons_pressed);
 
 }
-
-void startTimer()
-{
-		*TIMER1_CMD = 0x01; //start timer
-}
-
-void stopTimer()
-{
-		*TIMER1_CMD = 0x02; //stop timer
-}
-
-

@@ -177,5 +177,8 @@ struct song *startup_song_pointer;
 struct song *still_alive_song_pointer;
 struct song *lisa_song_pointer;
 
+void startTimer();
+void stopTimer();
+
 
 #endif
