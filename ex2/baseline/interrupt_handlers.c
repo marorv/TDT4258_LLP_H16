@@ -20,7 +20,7 @@ void __attribute__ ((interrupt)) TIMER1_IRQHandler()
 	 * interrupt by writing 1 to TIMER1_IFC 
 	 */
 	
-	*TIMER1_IFC = 1; // clear interrupt
+	//*TIMER1_IFC = 1; // clear interrupt
 
 		
 }

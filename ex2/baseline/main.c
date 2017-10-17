@@ -36,12 +36,6 @@ int main(void)
 	makeSongs();
 
 	uint16_t buttons_pressed;
-
-	/*
-	 * Enable interrupt handling 
-	*/
-	
-	//selectSong(buttons_pressed);
 	
 	while (1)
 	{	
