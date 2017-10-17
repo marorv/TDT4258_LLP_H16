@@ -41,13 +41,12 @@ void playSong()
 		song_counter = 0;	//reset song counter
 		tone_indice++;		//play next note
 
-		if(tone_indice > sizeof(current_song_pointer->tone_samples)-1) 
+		if(current_song_pointer->tone_samples[tone_indice] == -1) 
 		{
 			stopTimer();
 			start_song = 0;
 			tone_indice = 0;
-			*SCR = 0x6;			//Does not work as intended
-			__asm("wfi");
+			*SCR = 0x6;
 		}
 	}
 }
@@ -57,21 +56,25 @@ void selectSong(uint16_t buttons_pressed)
 	switch(buttons_pressed)
 	{
 		case BUTTON_1:
+			*SCR = 0x2;		
 			initializeSong(startup_song_pointer);
 			startTimer();
 			break;
 
 		case BUTTON_2:
+			*SCR = 0x2;	
 			initializeSong(got_song_pointer);
 			startTimer();
 			break;
 
 		case BUTTON_3:
+			*SCR = 0x2;	
 			initializeSong(still_alive_song_pointer);
 			startTimer();
 			break;
 
 		case BUTTON_4:
+			*SCR = 0x2;	
 			initializeSong(lisa_song_pointer);
 			startTimer();
 			break;
@@ -104,12 +107,14 @@ void makeSongs()
 			522, 
 			108, 
 			1022,
+			-1
 		}, 
 		{
 			(500*NUM_SAMPLES)/1000,
 			(500*NUM_SAMPLES)/1000, 
 			(500*NUM_SAMPLES)/1000, 
 			(500*NUM_SAMPLES)/1000,
+			0
 		},
 	};
 
@@ -172,6 +177,7 @@ void makeSongs()
 			NUM_SAMPLES/Bb3,
 			NUM_SAMPLES/F4,	
 			NUM_SAMPLES/Bb3,
+			-1,
 		},
 		{
 			(GoT_takt1*NUM_SAMPLES)/1000, 
@@ -231,6 +237,7 @@ void makeSongs()
 			(GoT_takt1*NUM_SAMPLES)/1000, 
 			(GoT_hel*NUM_SAMPLES)/1000,
 			(GoT_hel*NUM_SAMPLES)/1000,
+			0
 		},
 	};
 
@@ -263,7 +270,8 @@ void makeSongs()
 			NUM_SAMPLES/659, //satisfaction
 			NUM_SAMPLES/440,
 			NUM_SAMPLES/440,
-			NUM_SAMPLES/740
+			NUM_SAMPLES/740,
+			-1
 		}, 
 		{
 			(250*NUM_SAMPLES)/1000, //This
@@ -293,7 +301,8 @@ void makeSongs()
 			(500*NUM_SAMPLES)/1000, //satisfaction
 			(500*NUM_SAMPLES)/1000,
 			(250*NUM_SAMPLES)/1000,
-			(250*NUM_SAMPLES)/1000
+			(250*NUM_SAMPLES)/1000,
+			0
 		},
 	};
 
@@ -322,6 +331,7 @@ void makeSongs()
 			NUM_SAMPLES/D4, 
 			NUM_SAMPLES/D4, 
 			NUM_SAMPLES/C4, 
+			-1
 		}, 
 		{
 			(250*NUM_SAMPLES)/1000, 
@@ -346,7 +356,8 @@ void makeSongs()
 			(250*NUM_SAMPLES)/1000,
 			(250*NUM_SAMPLES)/1000,
 			(250*NUM_SAMPLES)/1000, 
-			(500*NUM_SAMPLES)/1000
+			(500*NUM_SAMPLES)/1000,
+			0
 		},
 	};
 

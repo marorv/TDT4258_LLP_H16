@@ -19,16 +19,13 @@ int main(void)
 
 	setupGPIO();
 	setupDAC();
-	setupTimer(SAMPLE_PERIOD);
 	setupNVIC();
+	setupTimer(SAMPLE_PERIOD);
 	makeSongs();
 	start_song = 0;
 
-
-	*SCR = 0x2;
-
 	//Deepsleep when nothing done
-	//*SCR = 0x6;
+	*SCR = 0x6;
 	//Waiting for interrupt
 	__asm("wfi");	
 
@@ -41,6 +38,6 @@ void setupNVIC()
 	*GPIO_EXTIFALL = 0xFF;			// interrupt on 1->0 transition
 	*GPIO_EXTIRISE = 0xFF; 			// interrupt on 0->1 transition
 	*GPIO_IEN = 0xFF; 				// enable interrupt generation 
-	*ISER0 = 0x802; 				// enable interrupt handling for even and odd buttons
+	*ISER0 = 0x1802; 				// enable interrupt handling for even and odd buttons
 	*GPIO_IFC = *GPIO_IF; 			// clear interrupt flags
 }

@@ -12,8 +12,6 @@ void setupTimer(uint16_t period)
 	*TIMER1_TOP = period; //set period of timer
 
 	*TIMER1_IEN = 0x01; // enable timer interrupt generation
-
-	*ISER0 |= 1 << 12; // enable timer interrupts
 }
 
 void startTimer()

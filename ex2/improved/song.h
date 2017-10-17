@@ -151,8 +151,8 @@ void playSong();
 void selectSong(uint16_t btn);
 
 struct song{
-	uint32_t tone_samples[57];
-	uint64_t tone_length[57];
+	uint32_t tone_samples[100];
+	uint64_t tone_length[100];
 };
 
 
