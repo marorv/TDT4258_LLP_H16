@@ -11,7 +11,6 @@
 void setupTimer(uint16_t period);
 void setupDAC();
 void setupGPIO();
-void setupNVIC();
 
 
 int main(void)
@@ -19,6 +18,7 @@ int main(void)
 	setupGPIO();
 	setupDAC();
 	setupTimer(SAMPLE_PERIOD);
+
 	start_song = 0;
 	makeSongs();
 
