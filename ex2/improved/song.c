@@ -47,6 +47,7 @@ void playSong()
 			start_song = 0;
 			tone_indice = 0;
 			*SCR = 0x6;
+			deactivateDAC();
 		}
 	}
 }
@@ -56,27 +57,28 @@ void selectSong(uint16_t buttons_pressed)
 	switch(buttons_pressed)
 	{
 		case BUTTON_1:
-			*SCR = 0x2;		
+			//*SCR = 0x2;		
 			initializeSong(startup_song_pointer);
-			startTimer();
+			//startTimer();
+			//activateDAC();
 			break;
 
 		case BUTTON_2:
-			*SCR = 0x2;	
+			//*SCR = 0x2;	
 			initializeSong(got_song_pointer);
-			startTimer();
+			//startTimer();
 			break;
 
 		case BUTTON_3:
-			*SCR = 0x2;	
+			//*SCR = 0x2;	
 			initializeSong(still_alive_song_pointer);
-			startTimer();
+			//startTimer();
 			break;
 
 		case BUTTON_4:
-			*SCR = 0x2;	
+			//*SCR = 0x2;	
 			initializeSong(lisa_song_pointer);
-			startTimer();
+			//startTimer();
 			break;
 
 		default:

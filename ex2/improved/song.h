@@ -180,5 +180,7 @@ struct song *lisa_song_pointer;
 void startTimer();
 void stopTimer();
 
+void activateDAC();
+void deactivateDAC();
 
 #endif

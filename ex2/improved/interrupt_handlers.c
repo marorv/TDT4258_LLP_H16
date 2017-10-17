@@ -34,8 +34,19 @@ void GPIO_Handler()
 
 	*GPIO_IFC = *GPIO_IF;
 
-	*GPIO_PA_DOUT = buttons_pressed;
+	if(buttons_pressed != 0xFF00){
+		
+		startTimer();
+		*SCR = 0x2;
+		activateDAC();
+	
+	} else {
+		//stopTimer();
+		//*SCR = 0x6;
+		//deactivateDAC();
+	}
 
 	selectSong(buttons_pressed);
-
+	*GPIO_PA_DOUT = buttons_pressed;	
+	
 }
