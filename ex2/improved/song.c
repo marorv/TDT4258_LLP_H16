@@ -46,8 +46,8 @@ void playSong()
 			stopTimer();
 			start_song = 0;
 			tone_indice = 0;
-			*SCR = 0x6;
-			__asm("wfi"); //Back to sleep mode
+			*SCR = 0x6;			//Does not work as intended
+			__asm("wfi");
 		}
 	}
 }

@@ -24,10 +24,13 @@ int main(void)
 	makeSongs();
 	start_song = 0;
 
+
+	*SCR = 0x2;
+
 	//Deepsleep when nothing done
-	*SCR = 0x6;
+	//*SCR = 0x6;
 	//Waiting for interrupt
-	__asm("wfi");
+	__asm("wfi");	
 
 }
 
