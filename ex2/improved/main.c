@@ -26,9 +26,7 @@ void setupNVIC();
 
 int main(void)
 {
-	/*
-	 * Call the peripheral setup functions 
-	 */
+
 	setupGPIO();
 	setupDAC();
 	setupTimer(SAMPLE_PERIOD);
@@ -36,15 +34,16 @@ int main(void)
 	start_song = 0;
 	makeSongs();
 
-	/*
-	 * Enable interrupt handling 
-	*/
+	//Deepsleep mode
+	//HPF deactivated in deepsleep, so only normal sleep when playing sound: 0x2
+	//DEEPSLEEP: =0x6 = 0b110
+	// sleep: = 0x2 = 0b010
 
-	
-	while (1)
-	{	
+	//Assembly code call
+	//__asm("wfi");
 
-	}
+	//Deepsleep when nothing done
+	*SCR = 0x2;
 
 
 }

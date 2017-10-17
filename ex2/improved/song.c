@@ -110,16 +110,16 @@ void makeSongs()
 
 	struct song startup_song = {
 		{
-			NUM_SAMPLES/261, 
+			261, 
 			522, 
 			108, 
 			1022,
 		}, 
 		{
-			(3000*NUM_SAMPLES)/1000,
-			 15000, 
-			 7500, 
-			 7500,
+			(500*NUM_SAMPLES)/1000,
+			(500*NUM_SAMPLES)/1000, 
+			(500*NUM_SAMPLES)/1000, 
+			(500*NUM_SAMPLES)/1000,
 		},
 	};
 
