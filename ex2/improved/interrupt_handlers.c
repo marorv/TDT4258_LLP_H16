@@ -54,6 +54,9 @@ void __attribute__ ((interrupt)) GPIO_ODD_IRQHandler()
 
 void GPIO_Handler()
 {
+	//Enable HPF Clock functionality again
+	*SCR = 0x0;
+
 	*GPIO_IFC = *GPIO_IF;
 
 	uint16_t buttons_pressed = *GPIO_PC_DIN << 8;

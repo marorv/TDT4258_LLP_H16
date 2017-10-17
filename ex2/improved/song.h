@@ -164,7 +164,7 @@ extern struct song current_song;
 extern struct song still_alive_song;
 extern struct song lisa_song;
 
-uint32_t song_counter;	// playSong() length
+uint32_t song_counter;		// playSong() length
 uint32_t sample_counter;	// playNote() samples
 uint32_t tone_indice;	
 

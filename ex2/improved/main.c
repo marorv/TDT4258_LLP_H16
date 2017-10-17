@@ -34,17 +34,12 @@ int main(void)
 	start_song = 0;
 	makeSongs();
 
-	//Deepsleep mode
-	//HPF deactivated in deepsleep, so only normal sleep when playing sound: 0x2
 	//DEEPSLEEP: =0x6 = 0b110
-	// sleep: = 0x2 = 0b010
-
-	//Assembly code call
-	//__asm("wfi");
+	// sleep: = 0x2 = 0b010 Doesn't work for some reason
+	// active = 0x0
 
 	//Deepsleep when nothing done
-	*SCR = 0x2;
-
+	*SCR = 0x6;
 
 }
 

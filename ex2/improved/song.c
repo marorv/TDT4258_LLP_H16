@@ -45,6 +45,7 @@ void playSong()
 		if(tone_indice > sizeof(current_song_pointer->tone_samples)-1) 
 		{
 			stopTimer();
+			*SCR = 0x6;
 			start_song = 0;
 			tone_indice = 0;
 		}
@@ -55,7 +56,6 @@ void playSong()
 
 void selectSong(uint16_t buttons_pressed)
 {
-
 	switch(buttons_pressed)
 	{
 		case BUTTON_1:
@@ -101,13 +101,6 @@ void initializeSong(struct song *song_pointer)
 //Also putting pointers in here
 void makeSongs()
 {
-	/*
-	struct song{
-	uint32_t tone_samples[57];
-	uint64_t tone_length[57];
-	};
-	*/
-
 	struct song startup_song = {
 		{
 			261, 
