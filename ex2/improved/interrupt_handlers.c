@@ -30,14 +30,15 @@ void __attribute__ ((interrupt)) GPIO_ODD_IRQHandler()
 
 void GPIO_Handler()
 {
-	uint16_t buttons_pressed = *GPIO_PC_DIN << 8;
 
 	*GPIO_IFC = *GPIO_IF;
 
+	uint16_t buttons_pressed = *GPIO_PC_DIN << 8;
+
 	if(buttons_pressed != 0xFF00){
 		
-		startTimer();
 		*SCR = 0x2;
+		startTimer();
 		activateDAC();
 	
 	} 
