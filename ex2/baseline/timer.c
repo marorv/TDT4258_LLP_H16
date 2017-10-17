@@ -22,5 +22,5 @@ void startTimer()
 
 void stopTimer()
 {
-		*TIMER1_CMD = 0x00; //stop timer
+		*TIMER1_CMD = 0x02; //stop timer
 }
