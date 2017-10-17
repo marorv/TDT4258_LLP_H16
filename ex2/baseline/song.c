@@ -3,8 +3,6 @@
 
 #include "song.h"
 #include "efm32gg.h"
-#include "interrupt_handlers.h"
-
 
 
 void playTone()
@@ -55,7 +53,6 @@ void playSong()
 
 void selectSong(uint16_t buttons_pressed)
 {
-
 	switch(buttons_pressed)
 	{
 		case BUTTON_1:
@@ -82,7 +79,6 @@ void selectSong(uint16_t buttons_pressed)
 			break;
 	}
 
-		
 }
 
 void initializeSong(struct song *song_pointer)
@@ -98,16 +94,9 @@ void initializeSong(struct song *song_pointer)
 //Structs should only be DEFINED in header file, but actual DECLARATION should happen in one source file
 //Otherwise we'll have our beloved multiple definition errors.
 
-//Also putting pointers in here
+//Declaring song structs and their pointers
 void makeSongs()
 {
-	/*
-	struct song{
-	uint32_t tone_samples[57];
-	uint64_t tone_length[57];
-	};
-	*/
-
 	struct song startup_song = {
 		{
 			NUM_SAMPLES/261, 
