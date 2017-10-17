@@ -7,18 +7,8 @@
 
 void GPIO_Handler();
 
-//According to internet, we can't have code outside of functions in C. Moving to main
-//start_song = 0;
-
-/*
- * TIMER1 interrupt handler 
- */
 void __attribute__ ((interrupt)) TIMER1_IRQHandler()
 {
-	/*
-	 * TODO feed new samples to the DAC remember to clear the pending
-	 * interrupt by writing 1 to TIMER1_IFC 
-	 */
 	
 	*TIMER1_IFC = 1; // clear interrupt
 
@@ -26,28 +16,14 @@ void __attribute__ ((interrupt)) TIMER1_IRQHandler()
 		
 }
 
-/*
- * GPIO even pin interrupt handler 
- */
 void __attribute__ ((interrupt)) GPIO_EVEN_IRQHandler()
 {
-	/*
-	 * TODO handle button pressed event, remember to clear pending
-	 * interrupt 
-	 */
 
 	GPIO_Handler();
 }
 
-/*
- * GPIO odd pin interrupt handler 
- */
 void __attribute__ ((interrupt)) GPIO_ODD_IRQHandler()
 {
-	/*
-	 * TODO handle button pressed event, remember to clear pending
-	 * interrupt 
-	 */
 
 	GPIO_Handler();
 }

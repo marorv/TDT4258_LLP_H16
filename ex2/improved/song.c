@@ -6,7 +6,6 @@
 #include "interrupt_handlers.h"
 
 
-
 void playTone()
 {
 	sample_counter++;
@@ -50,8 +49,6 @@ void playSong()
 			tone_indice = 0;
 		}
 	}
-
-
 }
 
 void selectSong(uint16_t buttons_pressed)
@@ -81,7 +78,6 @@ void selectSong(uint16_t buttons_pressed)
 		default:
 			break;
 	}
-
 		
 }
 
