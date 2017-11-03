@@ -7,6 +7,7 @@
 #include <unistd.h> //For close
 #include <fcntl.h> 	//For open
 #include <sys/mman.h> //For memory map
+#include <sys/ioctl.h> //For ioctl???
 
 #define FILEPATH "/dev/fb0"
 #define WIDTH 320
@@ -27,8 +28,7 @@ int main(int argc, char *argv[])
 	int fd;
 	struct stat sb;
 	off_t offset, pa_offset;
-	size_t length;
-	ssize_t s;
+	struct fb_copyarea area;
 	int i;
 
 	/*The following program prints part of the file specified in its first
@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
        the desired bytes.
 	*/
 
-	fd = open(FILEPATH, O_RDWR);
+	fd = open("/dev/fb0", O_RDWR);
 	if (fd == -1)
 	   handle_error("open");
 
@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
 	/* No length arg ==> display to end of file */
 	//length = sb.st_size - offset;
 
-	map = mmap(NULL, FILESIZE, PROT_READ, MAP_PRIVATE, fd, pa_offset);
+	map = mmap(NULL, FILESIZE, PROT_READ, MAP_PRIVATE, fd, 0);
 	if (map == MAP_FAILED)
 	   handle_error("mmap");
 
@@ -77,10 +77,19 @@ int main(int argc, char *argv[])
 	printf("%s\n", "Making a line");
 	for (i = WIDTH*5; i < WIDTH*6 - 1; i++)
 	{
-		map[i] = 0x1F;
+		map[i] = 0xF800;
 	}
 
-	munmap(map, length + offset - pa_offset);
+	//Update display
+	printf("%s\n", "Updating display");
+	area.dx = 0;
+	area.dy = 0;
+	area.width = WIDTH;
+	area.height = HEIGHT;
+
+	ioctl(fd, 0x4680, &area);
+
+	munmap(map, FILESIZE);
 	close(fd);
 
 	exit(EXIT_SUCCESS);
