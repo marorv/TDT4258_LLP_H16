@@ -7,7 +7,7 @@
 #include <unistd.h> //For close
 #include <fcntl.h> 	//For open
 #include <sys/mman.h> //For memory map
-#include <sys/ioctl.h> //For ioctl???
+#include <sys/ioctl.h> //For ioctl
 
 #define FILEPATH "/dev/fb0"
 #define WIDTH 320
@@ -75,19 +75,25 @@ int main(int argc, char *argv[])
 	}
 	*/
 	printf("%s\n", "Making a line");
-	for (i = WIDTH*5; i < WIDTH*6 - 1; i++)
+	for (i = 0; i < WIDTH - 1; i++)
 	{
 		map[i] = 0xF800;
 	}
 
 	//Update display
 	printf("%s\n", "Updating display");
-	area.dx = 0;
-	area.dy = 0;
+	area.dx = 10;
+	area.dy = 10;
 	area.width = WIDTH;
 	area.height = HEIGHT;
 
 	ioctl(fd, 0x4680, &area);
+
+	printf("%s\n", "Trying to do lseek");
+
+	lseek(fd, 8, SEEK_SET);
+	write(fd, 0xF800, 2);
+
 
 	munmap(map, FILESIZE);
 	close(fd);
