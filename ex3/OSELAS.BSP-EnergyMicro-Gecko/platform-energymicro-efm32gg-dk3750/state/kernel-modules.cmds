@@ -10,5 +10,6 @@ ptxd_install_file '-' '/lib/modules/3.12.0-rc4/modules.builtin' '0' '0' '0644' '
 ptxd_install_file '-' '/lib/modules/3.12.0-rc4/modules.dep' '0' '0' '0644' 'k'
 ptxd_install_file '-' '/lib/modules/3.12.0-rc4/modules.symbols.bin' '0' '0' '0644' 'k'
 ptxd_install_file '-' '/lib/modules/3.12.0-rc4/extra/driver-gamepad.ko' '0' '0' '0644' 'k'
+ptxd_install_file '-' '/lib/modules/3.12.0-rc4/extra/test-driver-gamepad.ko' '0' '0' '0644' 'k'
 ptxd_install_file '-' '/lib/modules/3.12.0-rc4/modules.softdep' '0' '0' '0644' 'k'
 ptxd_install_run postinst

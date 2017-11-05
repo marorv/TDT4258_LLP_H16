@@ -6,5 +6,5 @@ ptxd_install_replace '/etc/os-release' '@PRJVERSION@' '-2012.10.0+'
 ptxd_install_replace '/etc/os-release' '@PLATFORM@' 'energymicro-efm32gg-dk3750'
 ptxd_install_replace '/etc/os-release' '@PLATVERSION@' '-2012.10.0+'
 ptxd_install_replace '/etc/os-release' '@PTXDIST_VERSION@' '2013.07.1'
-ptxd_install_replace '/etc/os-release' '@DATE@' '2017-11-02T13:01:30+0100'
+ptxd_install_replace '/etc/os-release' '@DATE@' '2017-11-05T13:25:44+0100'
 ptxd_install_run postinst

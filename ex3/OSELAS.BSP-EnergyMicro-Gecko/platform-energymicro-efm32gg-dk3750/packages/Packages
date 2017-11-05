@@ -3,8 +3,8 @@ Version: 1.21.0
 Section: base
 Architecture: arm
 Maintainer: "Robert Schwebel <r.schwebel@pengutronix.de>"
-MD5Sum: 2ac324a274565444d227a73841abd3e1
-Size: 112842
+MD5Sum: 986b993c125f914bb3b7d933a2162eb5
+Size: 112768
 Filename: busybox_1.21.0_arm.ipk
 Source: http://www.ptxdist.org/
 Description: missing
@@ -16,7 +16,7 @@ Version: 20041102+1
 Section: base
 Architecture: arm
 Maintainer: "Robert Schwebel <r.schwebel@pengutronix.de>"
-MD5Sum: 411be67eb8465f9e1ec21a744394b59d
+MD5Sum: 8b8aabfcec84aad75d66556b90130f8a
 Size: 49166
 Filename: fbtest_20041102+1_arm.ipk
 Source: http://www.ptxdist.org/
@@ -29,8 +29,8 @@ Version: 1.0
 Section: base
 Architecture: arm
 Maintainer: ""
-MD5Sum: d5e9f26dbf7b1726b00d3c34f23317a8
-Size: 6834
+MD5Sum: d7421740fa821d70505553dbbf05410b
+Size: 17614
 Filename: game_1.0_arm.ipk
 Source: http://www.ptxdist.org/
 Description: missing
@@ -42,7 +42,7 @@ Version: 1.0.0
 Section: base
 Architecture: arm
 Maintainer: "Marc Kleine-Budde <mkl@pengutronix.de>"
-MD5Sum: 4cdbe8c3bc1127055c425e857639b9b7
+MD5Sum: ab3b793ce6f62ab131aae5919efe0ecb
 Size: 806
 Filename: init_1.0.0_arm.ipk
 Source: http://www.ptxdist.org/
@@ -55,8 +55,8 @@ Version: 3.12~rc4
 Section: base
 Architecture: arm
 Maintainer: "Robert Schwebel <r.schwebel@pengutronix.de>"
-MD5Sum: 59e9ea876e42b74e4a4d282927f63ad1
-Size: 4284
+MD5Sum: 558716a34d1ae0a6268e3efb8b333915
+Size: 4276
 Filename: kernel-modules_3.12~rc4_arm.ipk
 Source: http://www.ptxdist.org/
 Description: missing
@@ -68,8 +68,8 @@ Version: 1.0
 Section: base
 Architecture: arm
 Maintainer: "Michael Olbrich <m.olbrich@pengutronix.de>"
-MD5Sum: 8cf91bdc5d4d0a8ead9fc3247fa29b91
-Size: 872
+MD5Sum: 6027d2b2da2953abe71c3c045fdd1760
+Size: 868
 Filename: os-release_1.0_arm.ipk
 Source: http://www.ptxdist.org/
 Description: missing
@@ -81,8 +81,8 @@ Version: 1.0.0
 Section: base
 Architecture: arm
 Maintainer: "Robert Schwebel <r.schwebel@pengutronix.de>"
-MD5Sum: 6c41b53dd18cf356eebe1b2ed26c6628
-Size: 1078
+MD5Sum: 0f5700b564c99e888cb56be0362bdd4a
+Size: 1072
 Filename: rootfs_1.0.0_arm.ipk
 Source: http://www.ptxdist.org/
 Description: missing

@@ -839,7 +839,7 @@ configure:13648: $? = 0
 configure:13648: result: yes
 configure:13648: checking for secure_getenv
 configure:13648: gcc -std=gnu99 -o conftest -g -O2   conftest.c  >&5
-/tmp/ccRZ3TfH.o: In function `main':
+/tmp/cc7Qqr2a.o: In function `main':
 /home/tdt4258/TDT4258_LLP_H17/ex3/OSELAS.BSP-EnergyMicro-Gecko/platform-energymicro-efm32gg-dk3750/build-host/kmod-13/conftest.c:66: undefined reference to `secure_getenv'
 collect2: ld returned 1 exit status
 configure:13648: $? = 1
@@ -916,7 +916,7 @@ configure: failed program was:
 configure:13648: result: no
 configure:13648: checking for finit_module
 configure:13648: gcc -std=gnu99 -o conftest -g -O2   conftest.c  >&5
-/tmp/ccdiqwil.o: In function `main':
+/tmp/ccYrnEh7.o: In function `main':
 /home/tdt4258/TDT4258_LLP_H17/ex3/OSELAS.BSP-EnergyMicro-Gecko/platform-energymicro-efm32gg-dk3750/build-host/kmod-13/conftest.c:66: undefined reference to `finit_module'
 collect2: ld returned 1 exit status
 configure:13648: $? = 1

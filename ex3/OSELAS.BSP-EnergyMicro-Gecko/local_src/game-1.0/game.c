@@ -19,7 +19,6 @@
 #define handle_error(msg) \
 	do { perror(msg); exit(EXIT_FAILURE); } while (0)
 
-
 int main(int argc, char *argv[])
 {		
 
@@ -27,10 +26,12 @@ int main(int argc, char *argv[])
 
 	uint16_t *map;
 	int fd;
+	int gpio_fd;
 	struct stat sb;
 	off_t offset, pa_offset;
 	struct fb_copyarea area;
 	int i;
+
 
 	/*The following program prints part of the file specified in its first
        command-line argument to standard output.  The range of bytes to be
@@ -39,6 +40,10 @@ int main(int argc, char *argv[])
        of the required pages of the file and then uses write(2) to output
        the desired bytes.
 	*/
+	gpio_fd = open("/dev/GPIO_buttons", O_RDWR);
+	if (gpio_fd == -1)
+	   handle_error("open");
+	printf("%s\n", "Opened GPIO_buttons");
 
 	fd = open("/dev/fb0", O_RDWR);
 	if (fd == -1)
@@ -93,6 +98,8 @@ int main(int argc, char *argv[])
 
 	munmap(map, FILESIZE);
 	close(fd);
+	close(gpio_fd);
 
 	exit(EXIT_SUCCESS);
+
 }

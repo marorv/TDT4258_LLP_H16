@@ -12,6 +12,7 @@ f:/lib/modules/3.12.0-rc4/modules.builtin:0:0:0644
 f:/lib/modules/3.12.0-rc4/modules.dep:0:0:0644
 f:/lib/modules/3.12.0-rc4/modules.symbols.bin:0:0:0644
 f:/lib/modules/3.12.0-rc4/extra/driver-gamepad.ko:0:0:0644
+f:/lib/modules/3.12.0-rc4/extra/test-driver-gamepad.ko:0:0:0644
 f:/lib/modules/3.12.0-rc4/modules.softdep:0:0:0644
 f:/usr/bin/game:0:0:0755
 f:/bin/busybox:0:0:755

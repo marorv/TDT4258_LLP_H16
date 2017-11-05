@@ -12,7 +12,6 @@ date busybox:arm:./bin/date
 depmod busybox:arm:./sbin/depmod
 dev rootfs:arm:./dev
 dmesg busybox:arm:./bin/dmesg
-driver-gamepad.ko kernel-modules:arm:./lib/modules/3.12.0-rc4/extra/driver-gamepad.ko
 echo busybox:arm:./bin/echo
 egrep busybox:arm:./bin/egrep
 etc os-release:arm:./etc,rootfs:arm:./etc
@@ -67,6 +66,7 @@ sh busybox:arm:./bin/sh
 sleep busybox:arm:./bin/sleep
 sys rootfs:arm:./sys
 test busybox:arm:./bin/test
+test-driver-gamepad.ko kernel-modules:arm:./lib/modules/3.12.0-rc4/extra/test-driver-gamepad.ko
 tmp rootfs:arm:./tmp
 true busybox:arm:./bin/true
 uname busybox:arm:./bin/uname

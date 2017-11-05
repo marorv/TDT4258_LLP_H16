@@ -1073,8 +1073,8 @@ configure:21983: $? = 0
 configure:21995: result: yes
 configure:22002: checking for _doprnt
 configure:22059: gcc -o conftest -g -O2   conftest.c  >&5
-/tmp/ccC70uoH.o:(.data+0x0): undefined reference to `_doprnt'
-/tmp/ccC70uoH.o: In function `main':
+/tmp/cczVgPGG.o:(.data+0x0): undefined reference to `_doprnt'
+/tmp/cczVgPGG.o: In function `main':
 /home/tdt4258/TDT4258_LLP_H17/ex3/OSELAS.BSP-EnergyMicro-Gecko/platform-energymicro-efm32gg-dk3750/build-host/ipkg-0.99.163/conftest.c:89: undefined reference to `_doprnt'
 collect2: ld returned 1 exit status
 configure:22065: $? = 1
