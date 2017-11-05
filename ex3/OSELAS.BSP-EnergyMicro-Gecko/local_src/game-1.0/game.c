@@ -8,6 +8,7 @@
 #include <fcntl.h> 	//For open
 #include <sys/mman.h> //For memory map
 #include <sys/ioctl.h> //For ioctl
+#include <stdint.h> //For ioctl
 
 #define FILEPATH "/dev/fb0"
 #define WIDTH 320
@@ -24,7 +25,7 @@ int main(int argc, char *argv[])
 
 	printf("Hello World, I'm game!\n");
 
-	char *map;
+	uint16_t *map;
 	int fd;
 	struct stat sb;
 	off_t offset, pa_offset;
@@ -60,7 +61,7 @@ int main(int argc, char *argv[])
 	/* No length arg ==> display to end of file */
 	//length = sb.st_size - offset;
 
-	map = mmap(NULL, FILESIZE, PROT_READ, MAP_PRIVATE, fd, 0);
+	map = (uint16_t*)mmap(NULL, FILESIZE, PROT_READ, MAP_PRIVATE, fd, 0);
 	if (map == MAP_FAILED)
 	   handle_error("mmap");
 
@@ -82,17 +83,12 @@ int main(int argc, char *argv[])
 
 	//Update display
 	printf("%s\n", "Updating display");
-	area.dx = 10;
-	area.dy = 10;
+	area.dx = 0;
+	area.dy = 0;
 	area.width = WIDTH;
 	area.height = HEIGHT;
 
 	ioctl(fd, 0x4680, &area);
-
-	printf("%s\n", "Trying to do lseek");
-
-	lseek(fd, 8, SEEK_SET);
-	write(fd, 0xF800, 2);
 
 
 	munmap(map, FILESIZE);
