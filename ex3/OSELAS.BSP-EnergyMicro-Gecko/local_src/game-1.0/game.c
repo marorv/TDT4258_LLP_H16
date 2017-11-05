@@ -92,8 +92,16 @@ int main(int argc, char *argv[])
 	area.dy = 0;
 	area.width = WIDTH;
 	area.height = HEIGHT;
-
 	ioctl(fd, 0x4680, &area);
+
+	char prev_input = 0;
+	uint32_t i=0;
+	uint32_t read_buf;
+	while(i++ < 5)
+	{
+		read(gpio_fd, read_buf, sizeof(read_buf));
+		printf("%d\n", read_buf);		
+	}
 
 
 	munmap(map, FILESIZE);

@@ -10,6 +10,9 @@
 #include <linux/fs.h> //For file_operations
 #include <linux/cdev.h> //For cdevs
 #include <linux/device.h> //For device
+#include <linux/uaccess.h>
+#include <asm/io.h>
+#include <linux/ioport.h>
 
 #include "efm32gg.h"
 
@@ -110,7 +113,10 @@ static int gamepad_open(struct inode *inode, struct file *filp){
 }
 
 static int gamepad_read(struct inode *inode, struct file *filp){
+
 	printk(KERN_INFO "read");
+	//uint32_t data = ioread32(GPIO_PC_DIN);
+	//copy_to_user(buff, &test, 4);
 	return 0;
 }
 
