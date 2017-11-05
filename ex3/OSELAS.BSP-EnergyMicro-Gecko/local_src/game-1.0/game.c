@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
 	off_t offset, pa_offset;
 	struct fb_copyarea area;
 	int i;
-	uint32_t ch, write_buf[100], read_buf[100];
+	uint32_t ch, write_buf[100], read_buf[10];
 
 
 	/*The following program prints part of the file specified in its first
@@ -81,27 +81,34 @@ int main(int argc, char *argv[])
 	   exit(EXIT_FAILURE);
 	}
 	*/
-	printf("%s\n", "Making a line");
-	for (i = 0; i < WIDTH - 1; i++)
-	{
-		map[i] = 0xF800;
-	}
 
-	//Update display
-	printf("%s\n", "Updating display");
-	area.dx = 0;
-	area.dy = 0;
-	area.width = WIDTH;
-	area.height = HEIGHT;
-	ioctl(fd, 0x4680, &area);
 
 	char prev_input = 0;
-	uint32_t k=0;
-	while(k++ < 5)
+	uint32_t k=1;
+	while(1)
 	{
 		read(gpio_fd, read_buf, sizeof(read_buf));
-		printf ("The data in the device is %s\n", read_buf);		
+		printf ("The data in the device is %s\n", read_buf);
+		if (read_buf == 0xfe)
+		{
+			printf("%s\n", "Making a line");
+			for (i = 0; i < WIDTH*k - 1; i++)
+			{
+				map[i] = 0xF800;
+			}
+			k++;
+
+			//Update display
+			printf("%s\n", "Updating display");
+			area.dx = 0;
+			area.dy = 0;
+			area.width = WIDTH;
+			area.height = HEIGHT;
+			ioctl(fd, 0x4680, &area);
+		}	
 	}
+
+
 
 
 	munmap(map, FILESIZE);
