@@ -31,6 +31,7 @@ int main(int argc, char *argv[])
 	off_t offset, pa_offset;
 	struct fb_copyarea area;
 	int i;
+	uint32_t ch, write_buf[100], read_buf[100];
 
 
 	/*The following program prints part of the file specified in its first
@@ -95,12 +96,11 @@ int main(int argc, char *argv[])
 	ioctl(fd, 0x4680, &area);
 
 	char prev_input = 0;
-	uint32_t i=0;
-	uint32_t read_buf;
-	while(i++ < 5)
+	uint32_t k=0;
+	while(k++ < 5)
 	{
 		read(gpio_fd, read_buf, sizeof(read_buf));
-		printf("%d\n", read_buf);		
+		printf ("The data in the device is %s\n", read_buf);		
 	}
 
 
