@@ -10,7 +10,6 @@
 #include <sys/ioctl.h> //For ioctl
 #include <stdint.h> //For ioctl
 
-#define FILEPATH "/dev/fb0"
 #define WIDTH 320
 #define HEIGHT 240
 #define NUMPIXELS  (76799) //320*240-1
@@ -19,6 +18,13 @@
 #define handle_error(msg) \
 	do { perror(msg); exit(EXIT_FAILURE); } while (0)
 
+//Can screen and copyarea be global so that they don't have to be passed as parameters all the time???
+
+struct fb_copyarea area;
+
+void black_screen(uint16_t* screen, int in_fd, struct fb_copyarea in_area);
+void update_display(uint16_t* screen, int in_dx, int in_dy, int in_width, int in_height, int in_fd, struct fb_copyarea in_area);
+
 int main(int argc, char *argv[])
 {		
 
@@ -26,16 +32,8 @@ int main(int argc, char *argv[])
 	int fd;
 	struct stat sb;
 	struct fb_copyarea area;
-	int i;
 	uint32_t ch, write_buf[100], read_buf[10];
-
-	/*The following program prints part of the file specified in its first
-       command-line argument to standard output.  The range of bytes to be
-       printed is specified via offset and length values in the second and
-       third command-line arguments.  The program creates a memory mapping
-       of the required pages of the file and then uses write(2) to output
-       the desired bytes.
-	*/
+	//Can screen and copyarea be global so that they don't have to be passed as parameters all the time???
 
 	fd = open("/dev/fb0", O_RDWR);
 	if (fd == -1)
@@ -56,20 +54,22 @@ int main(int argc, char *argv[])
 
 }
 
-void black_screen(uint16_t* screen, int in_fd)
+void black_screen(uint16_t* screen, int in_fd, struct fb_copyarea in_area)
 {
+	int i;
 	//Draws the screen all black
 	for (i = 0; i < WIDTH*HEIGHT; i++)
 		{
 			screen[i] = 0x0000;
 		}
 
-		update_display(screen, 0, 0, WIDTH, HEIGHT, in_fd);
+	update_display(screen, 0, 0, WIDTH, HEIGHT, in_fd, in_area);
 }
 
-void update_display(uint16_t*, int in_dx, int in_dy, int in_width, int in_height, int in_fd)
+void update_display(uint16_t* screen, int in_dx, int in_dy, int in_width, int in_height, int in_fd, struct fb_copyarea in_area)
 {
-	//updates display
+	//Updates display
+	struct fb_copyarea area = in_area;
 	area.dx = in_dx;
 	area.dy = in_dy;
 	area.width = in_width;
