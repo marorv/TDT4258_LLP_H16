@@ -18,10 +18,8 @@
 #define handle_error(msg) \
 	do { perror(msg); exit(EXIT_FAILURE); } while (0)
 
-//Can screen and copyarea be global so that they don't have to be passed as parameters all the time???
 
-struct fb_copyarea area;
-
+//Can screen and copyarea be global or something so that they don't have to be passed as parameters all the time???
 void black_screen(uint16_t* screen, int in_fd, struct fb_copyarea in_area);
 void update_display(uint16_t* screen, int in_dx, int in_dy, int in_width, int in_height, int in_fd, struct fb_copyarea in_area);
 
@@ -33,7 +31,6 @@ int main(int argc, char *argv[])
 	struct stat sb;
 	struct fb_copyarea area;
 	uint32_t ch, write_buf[100], read_buf[10];
-	//Can screen and copyarea be global so that they don't have to be passed as parameters all the time???
 
 	fd = open("/dev/fb0", O_RDWR);
 	if (fd == -1)
@@ -56,8 +53,8 @@ int main(int argc, char *argv[])
 
 void black_screen(uint16_t* screen, int in_fd, struct fb_copyarea in_area)
 {
-	int i;
 	//Draws the screen all black
+	int i;
 	for (i = 0; i < WIDTH*HEIGHT; i++)
 		{
 			screen[i] = 0x0000;
