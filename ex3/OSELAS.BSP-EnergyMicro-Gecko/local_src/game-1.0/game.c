@@ -33,6 +33,8 @@ void writeRowCol2array(int row, int col, int16_t colour);
 void shooter(void);
 void drawPointer(int direction);
 double deg_rad(int angle); //Converts angle degrees to radians
+int end_x_calc(int start_x, int line_length, int direction);
+int end_y_calc(int start_y, int line_length, int direction);
 
 struct fb_copyarea area;
 uint16_t *screen;
@@ -81,7 +83,7 @@ int main(int argc, char *argv[])
 	int j = 0;
 	int i;
 
-	drawBigCircle(30, 50, Olive);
+	drawBigCircle(30, 50, Pink);
 
 	for (k=-90; k<90; k++)
 		drawPointer(k);
@@ -165,6 +167,7 @@ void drawCircle(int row, int column, uint16_t colour)
 void writeRowCol2array(int row, int col, int16_t colour)
 {
 	screen[(row * WIDTH + 1) + col] = colour;
+
 }
 
 void drawBigCircle(int start_row, int start_col, uint16_t colour)
@@ -176,20 +179,26 @@ void drawBigCircle(int start_row, int start_col, uint16_t colour)
 	{
 		for(col = -10; col <=10; col++)
 		{
-			if((row <= 3 && row >=-3) && (col == 10 || col == -10))
-				writeRowCol2array((start_row + row), (start_col+col), Olive);
+			if( (row <= 3 && row >=-3) && (abs(col) == 10) )
+				writeRowCol2array((start_row + row), (start_col+col), colour);
 			
-			if((col <= 3 && col >=-3) && (row == 10 || row == -10))
-				writeRowCol2array((start_row + row), (start_col+col), Olive);
+			if( (col <= 3 && col >=-3) && (abs(row) == 10) )
+				writeRowCol2array((start_row + row), (start_col+col), colour);
 			
-			if((row <= 5 && row >=-5) && (col == 9 || col == -9))
-				writeRowCol2array((start_row + row), (start_col+col), Olive);
+			if( (abs(row) == 5 || abs(row) == 4) && (abs(col) == 9) )
+				writeRowCol2array((start_row + row), (start_col+col), colour);
 
 			//if(((col <= 8 && col >= 6) || (col >= -8 && col <= -6)) && ((row <= 8 && row >= 6) || (row >= -8 && row <= -6)))
 			//	writeRowCol2array((start_row + row), (start_col+col), Olive);
 
-			if((row <= 3 && row >=-3) && (col == 10 || col == -10))
-				writeRowCol2array((start_row + row), (start_col+col), Olive);
+			if( (abs(col) == 4 || abs(col) == 5) && (abs(row) == 9) )
+				writeRowCol2array((start_row + row), (start_col+col), colour);
+
+			if( (abs(col) <= 6 && abs(col) >= 8) && (abs(row) <= 8 && abs(row) >= 6) )
+				writeRowCol2array((start_row + row), (start_col+col), colour);
+
+
+
 		}
 	}
 
@@ -244,10 +253,19 @@ double deg_rad(int angle)
 	return rad;
 }
 
+int end_x_calc(int start_x, int line_length, int direction)
+{
+	return start_x - (int)line_length * cos(deg_rad(direction));
+}
+int end_y_calc(int start_y, int line_length, int direction)
+{
+	return start_y - (int)line_length * sin(deg_rad(direction));
+}
+
 //Draw a line (pointer) of length 10 (plus 12, because beginning behind ball) that points in shooting direction
 void drawPointer(int direction)
 {
-	int line_length = 10;
+	int line_length = 50;
 	//Line originates at HEIGHT-(10+12), center of ball
 	int origin_x = HEIGHT - (10+12);
 	int origin_y = WIDTH/2;
@@ -255,15 +273,37 @@ void drawPointer(int direction)
 	int start_x = HEIGHT - (10+24);
 	int start_y = origin_y;
 	//End of line is at 10 distance away at angle direction
-	int end_x = start_x - (int)line_length * cos(deg_rad(direction));
-	int end_y = start_y - (int)line_length * sin(deg_rad(direction));
+	int end_x = end_x_calc(start_x, line_length, direction);
+	int end_y = end_y_calc(start_y, line_length, direction);
 
 	//Draw the line
 	int i = 0;
-	for(i=0; i<line_length; i++)
+	for(i = 0; i < line_length; i++)
 	{
-		writeRowCol2array(start_x - (int)(i * cos(deg_rad(direction))), start_y - (int)(i * sin(deg_rad(direction))), Red);
+		int end_x = end_x_calc(start_x, i, direction);
+		int end_y = end_y_calc(start_y, i, direction);
+		writeRowCol2array(end_x, end_y, Red);
 	}
+
+	//Find minimally updateable square
+	int min_x, min_y, max_x, max_y;
+	if (end_x < start_x) 
+	{
+		min_x = end_x;
+		max_x = start_x;
+	} 
+	else
+	{ 
+		min_x = start_x;
+		max_x = end_x;
+	}
+
+	if (end_y < start_y) min_y = end_y;
+	else min_y = start_y;
+	
+	max_y = start_y; //Always at start anyways
+
+	//update_display(min_x, min_y, max_x-min_x, max_y-min_y);
 
 	update_display(0, 0, WIDTH, HEIGHT);
 }
