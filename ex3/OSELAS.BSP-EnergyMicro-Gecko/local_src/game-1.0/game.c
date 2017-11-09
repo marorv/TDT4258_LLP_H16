@@ -27,7 +27,7 @@
 
 void black_screen();
 void drawCircle(int row, int column, uint16_t colour);
-void drawBigCircle(int row, int column, uint16_t colour);
+void drawBigCircle(int row, int column, int raduis, uint16_t colour);
 void update_display(int in_dx, int in_dy, int in_width, int in_height);
 void writeRowCol2array(int row, int col, int16_t colour);
 void shooter(void);
@@ -83,8 +83,8 @@ int main(int argc, char *argv[])
 	int j = 0;
 	int i;
 
-	drawBigCircle(30, 50, Pink);
-
+	drawBigCircle(30, 50, 10, Pink);
+	drawBigCircle(120, 70, 15, Green);
 	for (k=-90; k<90; k++)
 		drawPointer(k);
 
@@ -170,9 +170,9 @@ void writeRowCol2array(int row, int col, int16_t colour)
 
 }
 
-void drawBigCircle(int start_row, int start_col, uint16_t colour)
+void drawBigCircle(int start_row, int start_col, int radius, uint16_t colour)
 {
-	int row;
+	/*int row;
 	int col;
 
 	for(row = -10; row <= 10; row++)
@@ -200,6 +200,15 @@ void drawBigCircle(int start_row, int start_col, uint16_t colour)
 
 
 		}
+	}
+	*/
+	//Draw the line
+	int i;
+	for(i = 0; i <= 360; i++)
+	{
+		int end_x = end_x_calc(start_row, radius, i);
+		int end_y = end_y_calc(start_col, radius, i);
+		writeRowCol2array(end_x, end_y, colour);
 	}
 
 
