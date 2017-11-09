@@ -65,7 +65,7 @@ printk(KERN_ALERT "Attempting to load gamepad driver module\n");
         return -1;
     }
 
-      if (request_mem_region(GPIO_PC_MODEL, 1, DRIVER_NAME) == NULL ) {
+    if (request_mem_region(GPIO_PC_MODEL, 1, DRIVER_NAME) == NULL ) {
         printk(KERN_ALERT "Error requesting GPIO_PC_MODEL memory region, already in use?\n");
         return -1;
     }

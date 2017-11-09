@@ -11,18 +11,22 @@
 #include <stdint.h> 	//For ioctl
 #include <inttypes.h> 	// for printing hex numbers
 
+#include "graphics.h"
+
 #define FILEPATH "/dev/fb0"
 #define WIDTH 320
 #define HEIGHT 240
 #define NUMPIXELS  (76799) //320*240-1
 #define FILESIZE (153598) //16 bits per pixel
 
+
 #define handle_error(msg) \
 	do { perror(msg); exit(EXIT_FAILURE); } while (0)
 
 
 void black_screen();
-void drawCircle(int row, int column);
+void drawCircle(int row, int column, uint16_t colour);
+void drawBigCircle(int row, int column, uint16_t colour);
 void update_display(int in_dx, int in_dy, int in_width, int in_height);
 
 struct fb_copyarea area;
@@ -66,13 +70,21 @@ int main(int argc, char *argv[])
 
 	black_screen();
 
-	drawCircle(10, 10);
+
 
 	int k = 1;
 	int j = 0;
 	int i;
 
-	/*while(j++ < 1000)
+	for(k=0; k<5; k+=1) //Do 5 lines downwards
+	{
+		for(j=3; j < WIDTH; j+=7) //Start at 3 to get entire circle
+		{
+			drawCircle((k*6)+3, j, Pink);
+		}
+	}
+
+	while(j++ < 1000)
 	{
 		read(gpio_fd, &read_buf, sizeof(read_buf));
 
@@ -97,7 +109,7 @@ int main(int argc, char *argv[])
 			area.height = HEIGHT;
 			ioctl(fd, 0x4680, &area);
 		}	
-	}*/
+	}
 
 
 
@@ -110,34 +122,39 @@ int main(int argc, char *argv[])
 
 }
 
-void drawCircle(int row, int column)
+void drawCircle(int row, int column, uint16_t colour)
 {
 	int middle = (row * WIDTH + 1) + column;
 	int i;
 
 	for (i = 0; i<3; i++)
 	{
-		screen[(middle - 3*WIDTH-1) + i] = 0xF800;
-		screen[(middle + 3*WIDTH-1) + i] = 0xF800;
+		screen[(middle - 3*WIDTH-1) + i] = colour;
+		screen[(middle + 3*WIDTH-1) + i] = colour;
 	}
 
 	for (i = 0; i<5; i++)
 	{
 		if(i == 0 || i == 4)
 		{
-			screen[(middle - 2*WIDTH-2) + i] = 0xF800;
-			screen[(middle + 2*WIDTH-2) + i] = 0xF800;
+			screen[(middle - 2*WIDTH-2) + i] = colour;
+			screen[(middle + 2*WIDTH-2) + i] = colour;
 		}
 	}
 
 	for (i = -1; i<2; i++)
 	{
-		screen[(middle - i*WIDTH-3)] = 0xF800;
-		screen[(middle - i*WIDTH+3)] = 0xF800;
+		screen[(middle - i*WIDTH-3)] = colour;
+		screen[(middle - i*WIDTH+3)] = colour;
 	}
 
 	update_display(0, 0, WIDTH, HEIGHT);
 
+}
+
+void drawBigCircle(int row, int column, uint16_t colour)
+{
+	//Someone do this
 }
 
 void black_screen()
