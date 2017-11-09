@@ -23,9 +23,13 @@
 
 void shooter(void);
 void drawPointer(int direction);
+int end_x_calc(int start_x, int line_length, int direction);
+int end_y_calc(int start_y, int line_length, int direction);
+double deg_rad(int angle); //Converts angle degrees to radians
+
+//From  game.c
 void black_screen();
 void update_display(int in_dx, int in_dy, int in_width, int in_height);
-double deg_rad(int angle); //Converts angle degrees to radians
 void drawCircle();
 void writeRowCol2array();
 
