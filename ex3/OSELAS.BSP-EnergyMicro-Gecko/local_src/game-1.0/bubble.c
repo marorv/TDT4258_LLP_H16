@@ -39,6 +39,8 @@ void drawCircle() {}
 
 void writeRowCol2array() {}
 
+void update_display(int in_dx, int in_dy, int in_width, int in_height) {}
+
 //Put a new ball on the platform to shoot
 void shooter()
 {
@@ -65,10 +67,20 @@ double deg_rad(int angle)
 	return rad;
 }
 
+//Helper functions to determine where end of line is
+int end_x_calc(int start_x, int line_length, int direction)
+{
+	return start_x - (int)line_length * cos(deg_rad(direction));
+}
+int end_y_calc(int start_y, int line_length, int direction)
+{
+	return start_y - (int)line_length * sin(deg_rad(direction));
+}
+
 //Draw a line (pointer) of length 10 (plus 12, because beginning behind ball) that points in shooting direction
 void drawPointer(int direction)
 {
-	int line_length = 10;
+	int line_length = 50;
 	//Line originates at HEIGHT-(10+12), center of ball
 	int origin_x = HEIGHT - (10+12);
 	int origin_y = WIDTH/2;
@@ -76,20 +88,17 @@ void drawPointer(int direction)
 	int start_x = HEIGHT - (10+24);
 	int start_y = origin_y;
 	//End of line is at 10 distance away at angle direction
-	int end_x = start_x - (int)line_length * cos(deg_rad(direction));
-	int end_y = start_y - (int)line_length * sin(deg_rad(direction));
+	int end_x = end_x_calc(start_x, line_length, direction);
+	int end_y = end_y_calc(start_y, line_length, direction);
 
 	//Draw the line
 	int i = 0;
-	for(i=0; i<line_length; i++)
+	for(i = 0; i < line_length; i++)
 	{
-		writeRowCol2array(start_x - (int)(i * cos(deg_rad(direction))), start_y - (int)(i * sin(deg_rad(direction))));
+		int end_x = end_x_calc(start_x, line_length, direction);
+		int end_y = end_y_calc(start_y, line_length, direction);
+		writeRowCol2array(end_x, end_y, Red);
 	}
 
-	//Debug printing
-	/*
-	printf("Start of line: %d, %d with direction %d degrees \n", start_x, start_y, direction);
-	printf("End of line: %d, %d with direction %d degrees \n", end_x, end_y, direction);
-	*/
-
-} 
+	update_display(0, 0, WIDTH, HEIGHT);
+}
