@@ -19,17 +19,17 @@
 	do { perror(msg); exit(EXIT_FAILURE); } while (0)
 
 
-//Can screen and copyarea be global or something so that they don't have to be passed as parameters all the time???
-void black_screen(uint16_t* screen, int in_fd, struct fb_copyarea in_area);
-void update_display(uint16_t* screen, int in_dx, int in_dy, int in_width, int in_height, int in_fd, struct fb_copyarea in_area);
+
+
+
+void black_screen();
+void update_display(int in_dx, int in_dy, int in_width, int in_height);
 
 int main(int argc, char *argv[])
 {		
 
-	uint16_t *screen;
-	int fd;
+
 	struct stat sb;
-	struct fb_copyarea area;
 	uint32_t ch, write_buf[100], read_buf[10];
 
 	fd = open("/dev/fb0", O_RDWR);
@@ -43,6 +43,8 @@ int main(int argc, char *argv[])
 	if (screen == MAP_FAILED)
 	   handle_error("mmap");
 
+	black_screen();
+
 
 	munmap(screen, FILESIZE);
 	close(fd);
@@ -51,25 +53,3 @@ int main(int argc, char *argv[])
 
 }
 
-void black_screen(uint16_t* screen, int in_fd, struct fb_copyarea in_area)
-{
-	//Draws the screen all black
-	int i;
-	for (i = 0; i < WIDTH*HEIGHT; i++)
-		{
-			screen[i] = 0x0000;
-		}
-
-	update_display(screen, 0, 0, WIDTH, HEIGHT, in_fd, in_area);
-}
-
-void update_display(uint16_t* screen, int in_dx, int in_dy, int in_width, int in_height, int in_fd, struct fb_copyarea in_area)
-{
-	//Updates display
-	struct fb_copyarea area = in_area;
-	area.dx = in_dx;
-	area.dy = in_dy;
-	area.width = in_width;
-	area.height = in_height;
-	ioctl(in_fd, 0x4680, &area);
-}
