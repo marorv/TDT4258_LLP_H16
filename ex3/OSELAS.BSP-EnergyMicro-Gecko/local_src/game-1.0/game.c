@@ -9,6 +9,7 @@
 #include <sys/mman.h> //For memory map
 #include <sys/ioctl.h> //For ioctl
 #include <stdint.h> //For ioctl
+#include <inttypes.h> // for printing hex numbers
 
 #define FILEPATH "/dev/fb0"
 #define WIDTH 320
@@ -30,8 +31,8 @@ int main(int argc, char *argv[])
 	struct stat sb;
 	off_t offset, pa_offset;
 	struct fb_copyarea area;
-	int i;
-	uint32_t ch, write_buf[100], read_buf[10];
+	uint32_t ch, write_buf[100];
+	uint32_t read_buf;
 
 
 	/*The following program prints part of the file specified in its first
@@ -81,15 +82,18 @@ int main(int argc, char *argv[])
 	   exit(EXIT_FAILURE);
 	}
 	*/
-
-
 	char prev_input = 0;
-	uint32_t k=1;
-	while(1)
+	int k = 1;
+	int j = 0;
+	int i;
+	while(j++ < 1000)
 	{
-		read(gpio_fd, read_buf, sizeof(read_buf));
-		printf ("The data in the device is %s\n", read_buf);
-		if (read_buf == 0xfe)
+		read(gpio_fd, &read_buf, sizeof(read_buf));
+
+		uint16_t buttons_pressed = read_buf << 8;
+
+		printf ("The data in the device is %x\n", buttons_pressed);
+		if (buttons_pressed == 0xfe00)
 		{
 			printf("%s\n", "Making a line");
 			for (i = 0; i < WIDTH*k - 1; i++)

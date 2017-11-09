@@ -29,7 +29,7 @@
  */
 
 static int gamepad_open(struct inode *inode, struct file *filp);
-ssize_t gamepad_read(struct file *filp, char *buff, size_t count, loff_t *offp);
+static unsigned long gamepad_read(struct file *filp, char *buff, size_t count, loff_t *offp);
 
 static int gamepad_write(struct inode *inode, struct file *filp);
 static int gamepad_release(struct inode *inode, struct file *filp);
@@ -113,13 +113,13 @@ static int gamepad_open(struct inode *inode, struct file *filp){
 	return 0;
 }
 
-ssize_t gamepad_read(struct file *filp, char *buff, size_t count, loff_t *offp)
+static unsigned long gamepad_read(struct file *filp, uint32_t *buff, size_t count, loff_t *offp)
 {
-       unsigned long ret;
+
        printk("Inside read \n");
        uint32_t data = ioread32(GPIO_PC_DIN);
-       ret = copy_to_user(buff, &data, 1);
-       return ret;
+       return copy_to_user(buff, &data, 1);
+       
 }
 
 static int gamepad_write(struct inode *inode, struct file *filp){
