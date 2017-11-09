@@ -48,7 +48,7 @@ void shooter()
 	int init_x = WIDTH/2;
 	int init_y = HEIGHT-(10+12); //10 off the ground pluss half the width og the ball of width 24.
 
-	//Direction is the output angle at which ball is shot out. 0 is straight left, 90 up, 180 straight right
+	//Direction is the output angle at which ball is shot out. 180 is straight left, 90 up, 0 straight right
 	//direction should be larger than 0 and smaller than 180
 	int direction = 90; //Start straight up.
 	if (direction < 0) direction = 0;
