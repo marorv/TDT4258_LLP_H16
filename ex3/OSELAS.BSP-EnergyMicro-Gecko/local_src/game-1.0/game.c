@@ -28,6 +28,7 @@ void black_screen();
 void drawCircle(int row, int column, uint16_t colour);
 void drawBigCircle(int row, int column, uint16_t colour);
 void update_display(int in_dx, int in_dy, int in_width, int in_height);
+void writeRowCol2array(int row, int col, int16_t colour);
 
 struct fb_copyarea area;
 uint16_t *screen;
@@ -76,6 +77,9 @@ int main(int argc, char *argv[])
 	int j = 0;
 	int i;
 
+	drawBigCircle(30, 50, Olive);
+
+	/*
 	for(k=0; k<5; k+=1) //Do 5 lines downwards
 	{
 		for(j=3; j < WIDTH; j+=7) //Start at 3 to get entire circle
@@ -110,8 +114,7 @@ int main(int argc, char *argv[])
 			ioctl(fd, 0x4680, &area);
 		}	
 	}
-
-
+	*/
 
 
 	munmap(screen, FILESIZE);
@@ -152,9 +155,36 @@ void drawCircle(int row, int column, uint16_t colour)
 
 }
 
-void drawBigCircle(int row, int column, uint16_t colour)
+void writeRowCol2array(int row, int col, int16_t colour)
 {
-	//Someone do this
+	screen[(row * WIDTH + 1) + col] = colour;
+}
+
+void drawBigCircle(int start_row, int start_col, uint16_t colour)
+{
+	int row;
+	int col;
+
+	for(row = -10; row <= 10; row++)
+	{
+		for(col = -10; col <=10; col++)
+		{
+			if((row <= 3 && row >=-3) && (col == 10 || col == -10))
+				writeRowCol2array((start_row + row), (start_col+col), Olive);
+			
+			if((col <= 3 && col >=-3) && (row == 10 || row == -10))
+				writeRowCol2array((start_row + row), (start_col+col), Olive);
+			
+			if((row <= 5 && row >=-5) && (col == 9 || col == -9))
+				writeRowCol2array((start_row + row), (start_col+col), Olive);
+
+			if((col <= 8 && col >=-8) && ((row <= 8 && row >= 6) || (row >= -8 && row <= -6)))
+				writeRowCol2array((start_row + row), (start_col+col), Olive);
+		}
+	}
+
+
+	update_display(0, 0, WIDTH, HEIGHT);
 }
 
 void black_screen()
