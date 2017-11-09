@@ -10,6 +10,7 @@
 #include <sys/ioctl.h> 	//For ioctl
 #include <stdint.h> 	//For ioctl
 #include <inttypes.h> 	// for printing hex numbers
+#include <math.h>
 
 #include "graphics.h"
 
@@ -29,6 +30,9 @@ void drawCircle(int row, int column, uint16_t colour);
 void drawBigCircle(int row, int column, uint16_t colour);
 void update_display(int in_dx, int in_dy, int in_width, int in_height);
 void writeRowCol2array(int row, int col, int16_t colour);
+void shooter(void);
+void drawPointer(int direction);
+double deg_rad(int angle); //Converts angle degrees to radians
 
 struct fb_copyarea area;
 uint16_t *screen;
@@ -78,6 +82,9 @@ int main(int argc, char *argv[])
 	int i;
 
 	drawBigCircle(30, 50, Olive);
+
+	for (k=-90; k<90; k++)
+		drawPointer(k);
 
 	/*
 	for(k=0; k<5; k+=1) //Do 5 lines downwards
@@ -178,7 +185,10 @@ void drawBigCircle(int start_row, int start_col, uint16_t colour)
 			if((row <= 5 && row >=-5) && (col == 9 || col == -9))
 				writeRowCol2array((start_row + row), (start_col+col), Olive);
 
-			if((col <= 8 && col >=-8) && ((row <= 8 && row >= 6) || (row >= -8 && row <= -6)))
+			//if(((col <= 8 && col >= 6) || (col >= -8 && col <= -6)) && ((row <= 8 && row >= 6) || (row >= -8 && row <= -6)))
+			//	writeRowCol2array((start_row + row), (start_col+col), Olive);
+
+			if((row <= 3 && row >=-3) && (col == 10 || col == -10))
 				writeRowCol2array((start_row + row), (start_col+col), Olive);
 		}
 	}
@@ -207,4 +217,53 @@ void update_display(int in_dx, int in_dy, int in_width, int in_height)
 	area.width = in_width;
 	area.height = in_height;
 	ioctl(fd, 0x4680, &area);
+}
+
+void shooter()
+{
+	//Ball to fire should be sat at middle of screen, from bottom
+	int init_x = WIDTH/2;
+	int init_y = HEIGHT-(10+12); //10 off the ground pluss half the width og the ball of width 24.
+
+	//Direction is the output angle at which ball is shot out. 0 is straight left, 90 up, 180 straight right
+	//direction should be larger than 0 and smaller than 180
+	int direction = 90; //Start straight up.
+	if (direction < 0) direction = 0;
+	if (direction > 180) direction = 180;
+
+	//Place a ball pointing straight up at init_position
+	drawCircle(init_x, init_y, Red);
+
+	//Push buttons to go left and right, up to fire
+}
+
+double deg_rad(int angle)
+{
+	//x degrees/360 degrees = n rad/2*PI rad
+	double rad = angle*2*M_PI/360;
+	return rad;
+}
+
+//Draw a line (pointer) of length 10 (plus 12, because beginning behind ball) that points in shooting direction
+void drawPointer(int direction)
+{
+	int line_length = 10;
+	//Line originates at HEIGHT-(10+12), center of ball
+	int origin_x = HEIGHT - (10+12);
+	int origin_y = WIDTH/2;
+	//Start of line is outside of ball's radius
+	int start_x = HEIGHT - (10+24);
+	int start_y = origin_y;
+	//End of line is at 10 distance away at angle direction
+	int end_x = start_x - (int)line_length * cos(deg_rad(direction));
+	int end_y = start_y - (int)line_length * sin(deg_rad(direction));
+
+	//Draw the line
+	int i = 0;
+	for(i=0; i<line_length; i++)
+	{
+		writeRowCol2array(start_x - (int)(i * cos(deg_rad(direction))), start_y - (int)(i * sin(deg_rad(direction))), Red);
+	}
+
+	update_display(0, 0, WIDTH, HEIGHT);
 }
