@@ -100,5 +100,20 @@ void drawPointer(int direction)
 		writeRowCol2array(end_x, end_y, Red);
 	}
 
-	update_display(0, 0, WIDTH, HEIGHT);
+	//Find minimally updateable square
+	int min_x, min_y, max_x, max_y;
+	if (end_x < start_x) {
+		min_x = end_x;
+	} else {
+		min_x = start_x;
+	}
+
+	if (end_y < start_y) {
+		min_y = end_y;
+	} else { //Pointer is horizontally flat
+		min_y = 
+	}
+	max_y = start_y //Always at start anyways
+
+	update_display(min_x, min_y, max_x-min_x, max_y-min_y);
 }
