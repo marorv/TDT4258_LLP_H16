@@ -29,10 +29,9 @@ int main(int argc, char *argv[])
 	int fd;
 	int gpio_fd;
 	struct stat sb;
-	off_t offset, pa_offset;
+
 	struct fb_copyarea area;
-	uint32_t ch, write_buf[100];
-	uint32_t read_buf;
+	uint16_t read_buf;
 
 
 	/*The following program prints part of the file specified in its first
@@ -54,35 +53,11 @@ int main(int argc, char *argv[])
 	if (fstat(fd, &sb) == -1)           /* To obtain file size */
 	   handle_error("fstat");
 
-	offset = 0; 
-	pa_offset = offset & ~(sysconf(_SC_PAGE_SIZE) - 1);
-	   /* offset for mmap() must be page aligned */
-
-	/*
-	if (offset >= sb.st_size) {
-	   fprintf(stderr, "offset is past end of file\n");
-	   exit(EXIT_FAILURE);
-	}
-	*/
-
-	/* No length arg ==> display to end of file */
-	//length = sb.st_size - offset;
 
 	map = (uint16_t*)mmap(NULL, FILESIZE, PROT_READ, MAP_PRIVATE, fd, 0);
 	if (map == MAP_FAILED)
 	   handle_error("mmap");
 
-	/* DO NOT WRITE
-	s = write(STDOUT_FILENO, map + offset - pa_offset, length);
-	if (s != length) {
-	   if (s == -1)
-	       handle_error("write");
-
-	   fprintf(stderr, "partial write");
-	   exit(EXIT_FAILURE);
-	}
-	*/
-	char prev_input = 0;
 	int k = 1;
 	int j = 0;
 	int i;
@@ -90,10 +65,10 @@ int main(int argc, char *argv[])
 	{
 		read(gpio_fd, &read_buf, sizeof(read_buf));
 
-		uint16_t buttons_pressed = read_buf << 8;
+		read_buf = read_buf << 8;
 
-		printf ("The data in the device is %x\n", buttons_pressed);
-		if (buttons_pressed == 0xfe00)
+		printf ("The data in the device is %x\n", read_buf);
+		if (read_buf == 0xfe00)
 		{
 			printf("%s\n", "Making a line");
 			for (i = 0; i < WIDTH*k - 1; i++)
