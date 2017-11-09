@@ -26,7 +26,6 @@
 
 
 void black_screen();
-void drawCircle(int row, int column, uint16_t colour);
 void drawBigCircle(int row, int column, int raduis, uint16_t colour);
 void update_display(int in_dx, int in_dy, int in_width, int in_height);
 void writeRowCol2array(int row, int col, int16_t colour);
@@ -58,6 +57,7 @@ int main(int argc, char *argv[])
        of the required pages of the file and then uses write(2) to output
        the desired bytes.
 	*/
+
 	gpio_fd = open("/dev/GPIO_buttons", O_RDWR);
 	if (gpio_fd == -1)
 	   handle_error("open");
@@ -78,17 +78,21 @@ int main(int argc, char *argv[])
 	black_screen();
 
 
-
-	int k = 1;
-	int j = 0;
-	int i;
-
 	drawBigCircle(30, 50, 10, Pink);
+
 	drawBigCircle(120, 70, 15, Green);
+
+	drawBigCircle(220, 70, 50, Navy);
+
+	int k;
+
 	for (k=-90; k<90; k++)
 		drawPointer(k);
 
 	/*
+
+	int j, i;
+
 	for(k=0; k<5; k+=1) //Do 5 lines downwards
 	{
 		for(j=3; j < WIDTH; j+=7) //Start at 3 to get entire circle
@@ -134,36 +138,6 @@ int main(int argc, char *argv[])
 
 }
 
-void drawCircle(int row, int column, uint16_t colour)
-{
-	int middle = (row * WIDTH + 1) + column;
-	int i;
-
-	for (i = 0; i<3; i++)
-	{
-		screen[(middle - 3*WIDTH-1) + i] = colour;
-		screen[(middle + 3*WIDTH-1) + i] = colour;
-	}
-
-	for (i = 0; i<5; i++)
-	{
-		if(i == 0 || i == 4)
-		{
-			screen[(middle - 2*WIDTH-2) + i] = colour;
-			screen[(middle + 2*WIDTH-2) + i] = colour;
-		}
-	}
-
-	for (i = -1; i<2; i++)
-	{
-		screen[(middle - i*WIDTH-3)] = colour;
-		screen[(middle - i*WIDTH+3)] = colour;
-	}
-
-	update_display(0, 0, WIDTH, HEIGHT);
-
-}
-
 void writeRowCol2array(int row, int col, int16_t colour)
 {
 	screen[(row * WIDTH + 1) + col] = colour;
@@ -172,37 +146,7 @@ void writeRowCol2array(int row, int col, int16_t colour)
 
 void drawBigCircle(int start_row, int start_col, int radius, uint16_t colour)
 {
-	/*int row;
-	int col;
-
-	for(row = -10; row <= 10; row++)
-	{
-		for(col = -10; col <=10; col++)
-		{
-			if( (row <= 3 && row >=-3) && (abs(col) == 10) )
-				writeRowCol2array((start_row + row), (start_col+col), colour);
-			
-			if( (col <= 3 && col >=-3) && (abs(row) == 10) )
-				writeRowCol2array((start_row + row), (start_col+col), colour);
-			
-			if( (abs(row) == 5 || abs(row) == 4) && (abs(col) == 9) )
-				writeRowCol2array((start_row + row), (start_col+col), colour);
-
-			//if(((col <= 8 && col >= 6) || (col >= -8 && col <= -6)) && ((row <= 8 && row >= 6) || (row >= -8 && row <= -6)))
-			//	writeRowCol2array((start_row + row), (start_col+col), Olive);
-
-			if( (abs(col) == 4 || abs(col) == 5) && (abs(row) == 9) )
-				writeRowCol2array((start_row + row), (start_col+col), colour);
-
-			if( (abs(col) <= 6 && abs(col) >= 8) && (abs(row) <= 8 && abs(row) >= 6) )
-				writeRowCol2array((start_row + row), (start_col+col), colour);
-
-
-
-		}
-	}
-	*/
-	//Draw the line
+	//Draw the circle
 	int i;
 	for(i = 0; i <= 360; i++)
 	{
@@ -250,7 +194,7 @@ void shooter()
 	if (direction > 180) direction = 180;
 
 	//Place a ball pointing straight up at init_position
-	drawCircle(init_x, init_y, Red);
+	drawBigCircle(init_x, init_y, 5, Red);
 
 	//Push buttons to go left and right, up to fire
 }
