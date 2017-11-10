@@ -21,11 +21,19 @@
 #define handle_error(msg) \
 	do { perror(msg); exit(EXIT_FAILURE); } while (0)
 
+struct Ball { //Remember that now we always have to write "struct Ball" when making using this type
+	int pos_x;
+	int pos_y;
+	int direction;		
+	uint16_t colour; 	//like 0x7BE0
+};
+
 void shooter(void);
 void drawPointer(int direction);
 int end_x_calc(int start_x, int line_length, int direction);
 int end_y_calc(int start_y, int line_length, int direction);
 double deg_rad(int angle); //Converts angle degrees to radians
+struct Ball moveBall(struct Ball ball);
 
 //From  game.c
 void black_screen();
@@ -37,6 +45,14 @@ void writeRowCol2array();
 int main(int argc, char *argv[])
 {	
 	printf("Hi\n");
+	struct Ball testball;
+	testball.pos_x=100;
+	testball.pos_y=100;
+	testball.direction=45;
+	printf("Testball's position: (%d, %d)\n", testball.pos_x, testball.pos_y);
+	testball = moveBall(testball);
+	printf("Testball's new position: (%d, %d)\n", testball.pos_x, testball.pos_y);
+
 }
 
 void drawCircle() {}
@@ -59,7 +75,6 @@ void shooter()
 	if (direction > 180) direction = 180;
 
 	//Place a ball pointing straight up at init_position
-	drawCircle(init_x, init_y, Red);
 
 	//Push buttons to go left and right, up to fire
 }
@@ -126,4 +141,18 @@ void drawPointer(int direction)
 	}
 
 	update_display(min_x, min_y, max_x-min_x, max_y-min_y);
+}
+
+struct Ball moveBall(struct Ball ball)
+{
+	//Moves ball speed pixels per call in direction
+	struct Ball ret_ball = ball;
+	int speed = 5;
+	double angle = deg_rad(ball.direction);
+	int new_x = ball.pos_x + speed*cos(angle);
+	int new_y = ball.pos_y + speed*sin(angle);
+	ret_ball.pos_x = new_x;
+	ret_ball.pos_y = new_y;
+
+	return ret_ball;
 }
