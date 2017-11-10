@@ -29,11 +29,23 @@ void black_screen();
 void drawBigCircle(int row, int column, int raduis, uint16_t colour);
 void update_display(int in_dx, int in_dy, int in_width, int in_height);
 void writeRowCol2array(int row, int col, int16_t colour);
+
+//From bubble.c
+struct Ball { //Remember that now we always have to write "struct Ball" when making using this type
+	double pos_x;		//Positios should be doubles, and only be converted to ints wen putting them on the board
+	double pos_y;
+	int direction;		
+	uint16_t colour; 	//like 0x7BE0
+	int radius;			//Counting the middle pixel. Should be odd to have single center pixel
+};
+
 void shooter(void);
 void drawPointer(int direction);
-double deg_rad(int angle); //Converts angle degrees to radians
 int end_x_calc(int start_x, int line_length, int direction);
 int end_y_calc(int start_y, int line_length, int direction);
+double deg_rad(int angle); //Converts angle degrees to radians
+struct Ball moveBall(struct Ball ball);
+
 
 struct fb_copyarea area;
 uint16_t *screen;
@@ -86,8 +98,30 @@ int main(int argc, char *argv[])
 
 	int k;
 
+	/*
 	for (k=-90; k<90; k++)
 		drawPointer(k);
+	*/
+
+	struct Ball testball;
+	testball.pos_x=100;
+	testball.pos_y=100;
+	testball.direction=45;
+	testball.radius = 5;
+	testball.colour = Pink;
+
+
+	drawBigCircle((int)testball.pos_x, (int)testball.pos_y, testball.radius, testball.colour);
+
+	for(k=0; k<100; k++)
+	{
+
+		//drawBigCircle((int)testball.pos_x, (int)testball.pos_y, testball.radius, Black); //Erase previous ball
+		testball=moveBall(testball);
+		printf("Drawing testball at %d %d \n", (int)testball.pos_x, (int)testball.pos_y);
+		drawBigCircle((int)testball.pos_y, (int)testball.pos_x, testball.radius, testball.colour);
+
+	}
 
 	/*
 
@@ -144,6 +178,7 @@ void writeRowCol2array(int row, int col, int16_t colour)
 
 }
 
+//First value is y-value
 void drawBigCircle(int start_row, int start_col, int radius, uint16_t colour)
 {
 	//Draw the circle
@@ -259,4 +294,28 @@ void drawPointer(int direction)
 	//update_display(min_x, min_y, max_x-min_x, max_y-min_y);
 
 	update_display(0, 0, WIDTH, HEIGHT);
+}
+
+struct Ball moveBall(struct Ball ball)
+{
+	//Moves ball speed pixels in direction per call
+	struct Ball ret_ball = ball;
+	int speed = 1;
+	double angle = deg_rad(ret_ball.direction);
+	ret_ball.pos_x += speed*cos(angle);
+	ret_ball.pos_y -= speed*sin(angle);
+
+	//Handle encountering a wall or reacing top of screen.
+	//Reached left wall
+	if (ret_ball.pos_x - ret_ball.radius <= 0)
+	{
+		ret_ball.direction = 180 - ret_ball.direction;
+	}
+	//Reach right wall
+	if (ret_ball.pos_x + ret_ball.radius >= WIDTH)
+	{
+		ret_ball.direction += 90;
+	}
+
+	return ret_ball;
 }
