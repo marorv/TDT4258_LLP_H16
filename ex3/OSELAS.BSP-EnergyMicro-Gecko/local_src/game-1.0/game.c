@@ -29,6 +29,7 @@ void black_screen();
 void drawBigCircle(int row, int column, int raduis, uint16_t colour);
 void update_display(int in_dx, int in_dy, int in_width, int in_height);
 void writeRowCol2array(int row, int col, int16_t colour);
+void drawPlatform(VOID);
 
 //From bubble.c
 struct Ball { //Remember that now we always have to write "struct Ball" when making using this type
@@ -110,6 +111,7 @@ int main(int argc, char *argv[])
 	testball.radius = 5;
 	testball.colour = Pink;
 
+	drawPlatform();
 
 	drawBigCircle((int)testball.pos_x, (int)testball.pos_y, testball.radius, testball.colour);
 
@@ -204,6 +206,29 @@ void black_screen()
 		}
 
 	update_display(0, 0, WIDTH, HEIGHT);
+}
+
+void drawPlatform()
+{
+	int origin_x;
+	int origin_y;
+	int platf_width;
+	int platf_height;
+	origin_x = WIDTH/2 - 15;
+	origin_y = HEIGHT - 5;
+	platf_width = 30;
+	platf_height = 5;
+
+	int i;
+	int j;
+	for(i = origin_y; i < origin_y + platf_height; i++)
+	{
+		for(j = origin_x; j < origin_x + platf_width; j++)
+		{
+			writeRowCol2array(i, j, Red);
+		}
+	}
+
 }
 
 void update_display(int in_dx, int in_dy, int in_width, int in_height)
