@@ -54,35 +54,23 @@ int main(int argc, char *argv[])
 
 
 	struct Ball testball;
-	testball.pos_x=100;
-	testball.pos_y=100;
-	testball.direction=45;
+	testball.pos_x=WIDTH/2;
+	testball.pos_y=HEIGHT-5;
+	testball.direction=0;
 	testball.radius = 5;
 	testball.colour = Pink;
 
 	struct Ball prev_testball;
 	
 	drawPlatform(WIDTH/2 - 15);
-	drawPointer(testball.direction);
+	//drawPointer(testball.direction);
 
-	drawBigCircle((int)testball.pos_x, (int)testball.pos_y, testball.radius, testball.colour);
-
-
+	//drawBigCircle((int)testball.pos_y, (int)testball.pos_x, testball.radius, testball.colour);
 
 	int k;
-	int m, n;
-	for(k=0; k<10; k++)
-	{
 
-		prev_testball = testball;
-		prev_testball.colour = Black;
-		testball=moveBall(testball);
-		printf("Drawing testball at %d %d \n", (int)testball.pos_x, (int)testball.pos_y);
-		drawBigCircle((int)prev_testball.pos_y, (int)prev_testball.pos_x, prev_testball.radius, prev_testball.colour);
-		drawBigCircle((int)testball.pos_y, (int)testball.pos_x, testball.radius, testball.colour);
-
-	}
-	k = 0;
+	int j;
+	j = 0;
 	uint16_t buttons_pressed;
 	while(1)
 	{
@@ -91,20 +79,33 @@ int main(int argc, char *argv[])
 		switch(buttons_pressed){
 
 			case LEFT_BUTTON:
-				k += 10;
+				j += 10;
 				printf("Left button pressed\n");
 				break;
 			case RIGHT_BUTTON:
-				k -= 10;
+				j -= 10;
 				printf("Right button pressed\n");
+				break;
+			case SHOOT_BUTTON:
+				printf("Shoot button pressed\n");
+				testball.direction = j;
+				for(k=0; k<25; k++)
+				{
+					prev_testball = testball;
+					prev_testball.colour = Black;
+					testball=moveBall(testball);
+					drawBigCircle((int)prev_testball.pos_y, (int)prev_testball.pos_x, prev_testball.radius, prev_testball.colour);
+					printf("Drawing testball at %d %d \n", (int)prev_testball.pos_y, (int)prev_testball.pos_x);
+					drawBigCircle((int)testball.pos_y, (int)testball.pos_x, testball.radius, testball.colour);
+				}
 				break;
 			default:
 				printf("Buttons pressed: %x\n", buttons_pressed);
 		
 		}
-		if (k >= 90) k = 89;
-		if (k <= -90) k = -89;
-		drawPointer(k);
+		if (j >= 90) j = 89;
+		if (j <= -90) j = -89;
+		drawPointer(j);
 
 	}
 

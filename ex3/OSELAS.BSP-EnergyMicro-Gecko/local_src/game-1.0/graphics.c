@@ -65,7 +65,7 @@ void drawPlatform(int origin_x)
 	{
 		for(j = origin_x; j < origin_x + platf_width; j++)
 		{
-			writeRowCol2array(i, j, Red);
+			writeRowCol2array(i, j, Maroon);
 		}
 	}
 
@@ -135,8 +135,8 @@ void drawPointer(int direction)
 	int i = 0;
 	for(i = 0; i < line_length; i++)
 	{
-		int end_x = end_x_calc(start_x, i, direction);
-		int end_y = end_y_calc(start_y, i, direction);
+		int end_x = end_x_calc(origin_x, i, direction);
+		int end_y = end_y_calc(origin_y, i, direction);
 		writeRowCol2array(end_x, end_y, Red);
 	}
 
@@ -165,10 +165,11 @@ void drawPointer(int direction)
 
 struct Ball moveBall(struct Ball ball)
 {
+	//90 is right, 0 is up and -90 is left
 	//Moves ball speed pixels in direction per call
 	struct Ball ret_ball = ball;
 	int speed = ret_ball.radius;
-	double angle = deg_rad(ret_ball.direction);
+	double angle = deg_rad(ret_ball.direction-90);
 	ret_ball.pos_x += speed*cos(angle);
 	ret_ball.pos_y -= speed*sin(angle);
 
