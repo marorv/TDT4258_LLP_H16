@@ -22,10 +22,11 @@
 	do { perror(msg); exit(EXIT_FAILURE); } while (0)
 
 struct Ball { //Remember that now we always have to write "struct Ball" when making using this type
-	int pos_x;
-	int pos_y;
+	double pos_x;		//Positios should be doubles, and only be converted to ints wen putting them on the board
+	double pos_y;
 	int direction;		
 	uint16_t colour; 	//like 0x7BE0
+	int radius;			//Counting the middle pixel. Should be odd to have single center pixel
 };
 
 void shooter(void);
@@ -46,13 +47,18 @@ int main(int argc, char *argv[])
 {	
 	printf("Hi\n");
 	struct Ball testball;
-	testball.pos_x=100;
+	testball.pos_x=310;
 	testball.pos_y=100;
 	testball.direction=45;
-	printf("Testball's position: (%d, %d)\n", testball.pos_x, testball.pos_y);
-	testball = moveBall(testball);
-	printf("Testball's new position: (%d, %d)\n", testball.pos_x, testball.pos_y);
-
+	testball.radius = 5;
+	printf("Testball's position: (%f, %f)\n", testball.pos_x, testball.pos_y);
+	int i;
+	for (i=0; i<20; i++)
+	{
+		testball = moveBall(testball);
+		printf("Testball's new position: %d, %d (%f, %f)\n", (int)testball.pos_x, (int)testball.pos_y, testball.pos_x, testball.pos_y);	
+	}
+	
 }
 
 void drawCircle() {}
@@ -69,10 +75,10 @@ void shooter()
 	int init_y = HEIGHT-(10+12); //10 off the ground pluss half the width og the ball of width 24.
 
 	//Direction is the output angle at which ball is shot out. 180 is straight left, 90 up, 0 straight right
-	//direction should be larger than 0 and smaller than 180
+	//direction should be larger than 1 and smaller than 179 (so it won't bounce straight back and forth and be "trapped")
 	int direction = 90; //Start straight up.
-	if (direction < 0) direction = 0;
-	if (direction > 180) direction = 180;
+	if (direction < 1) direction = 1;
+	if (direction > 79) direction = 179;
 
 	//Place a ball pointing straight up at init_position
 
@@ -145,14 +151,24 @@ void drawPointer(int direction)
 
 struct Ball moveBall(struct Ball ball)
 {
-	//Moves ball speed pixels per call in direction
+	//Moves ball speed pixels in direction per call
 	struct Ball ret_ball = ball;
-	int speed = 5;
-	double angle = deg_rad(ball.direction);
-	int new_x = ball.pos_x + speed*cos(angle);
-	int new_y = ball.pos_y + speed*sin(angle);
-	ret_ball.pos_x = new_x;
-	ret_ball.pos_y = new_y;
+	int speed = 1;
+	double angle = deg_rad(ret_ball.direction);
+	ret_ball.pos_x += speed*cos(angle);
+	ret_ball.pos_y += speed*sin(angle);
+
+	//Handle encountering a wall or reacing top of screen.
+	//Reached left wall
+	if (ret_ball.pos_x - ret_ball.radius <= 0)
+	{
+		ret_ball.direction = 180 - ret_ball.direction;
+	}
+	//Reach right wall
+	if (ret_ball.pos_x + ret_ball.radius >= WIDTH)
+	{
+		ret_ball.direction += 90;
+	}
 
 	return ret_ball;
 }
