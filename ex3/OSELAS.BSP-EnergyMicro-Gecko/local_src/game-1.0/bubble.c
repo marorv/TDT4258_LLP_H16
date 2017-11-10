@@ -90,8 +90,8 @@ void drawPointer(int direction)
 	int origin_y = WIDTH/2;
 	//Start of line is outside of ball's radius
 	int start_x = HEIGHT - (10+24);
-	int start_y = origin_y;
-	//End of line is at 10 distance away at angle direction
+	int start_y = origin_y + (12);
+	//End of line is at line_length distance away at angle direction
 	int end_x = end_x_calc(start_x, line_length, direction);
 	int end_y = end_y_calc(start_y, line_length, direction);
 
@@ -106,18 +106,24 @@ void drawPointer(int direction)
 
 	//Find minimally updateable square
 	int min_x, min_y, max_x, max_y;
+	min_x = start_x - line_length;	//Pointer horizontally left, start - length
+	min_y = start_y - line_length;	//Pointer straight up, start- length
+	max_x = start_x + line_length;	//Pointer horizontally right, start + length
+	max_y = start_y;				//Pointer horizontally out from center, start (always the case)
+
 	if (end_x < start_x) {
 		min_x = end_x;
-	} else {
+		max_x = start_x;
+	} else { 
 		min_x = start_x;
+		max_x = end_x;
 	}
 
 	if (end_y < start_y) {
 		min_y = end_y;
 	} else { //Pointer is horizontally flat
-		min_y = 
+		min_y = start_y;
 	}
-	max_y = start_y //Always at start anyways
 
 	update_display(min_x, min_y, max_x-min_x, max_y-min_y);
 }
