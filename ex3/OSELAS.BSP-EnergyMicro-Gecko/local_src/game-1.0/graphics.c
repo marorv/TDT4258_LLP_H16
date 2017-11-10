@@ -122,7 +122,7 @@ void drawPointer(int direction)
 {
 	int line_length = 50;
 	//Line originates at HEIGHT-(10+12), center of ball
-	int origin_x = HEIGHT - (10+12);
+	int origin_x = HEIGHT - 5;
 	int origin_y = WIDTH/2;
 	//Start of line is outside of ball's radius
 	int start_x = HEIGHT - (10+24);
@@ -160,14 +160,14 @@ void drawPointer(int direction)
 
 	//update_display(min_x, min_y, max_x-min_x, max_y-min_y);
 
-	update_display(0, 0, WIDTH, HEIGHT);
+	update_display(WIDTH/2-50, HEIGHT-50, 100, 50);
 }
 
 struct Ball moveBall(struct Ball ball)
 {
 	//Moves ball speed pixels in direction per call
 	struct Ball ret_ball = ball;
-	int speed = 2*ret_ball.radius;
+	int speed = ret_ball.radius;
 	double angle = deg_rad(ret_ball.direction);
 	ret_ball.pos_x += speed*cos(angle);
 	ret_ball.pos_y -= speed*sin(angle);

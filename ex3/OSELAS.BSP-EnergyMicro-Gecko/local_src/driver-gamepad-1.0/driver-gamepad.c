@@ -116,7 +116,7 @@ static int gamepad_open(struct inode *inode, struct file *filp){
 static unsigned long gamepad_read(struct file *filp, uint16_t *buff, size_t count, loff_t *offp)
 {
 
-       printk("Inside read \n");
+       //printk("Inside read \n");
        uint32_t data = ioread32(GPIO_PC_DIN);
        return copy_to_user(buff, &data, 1);
        
