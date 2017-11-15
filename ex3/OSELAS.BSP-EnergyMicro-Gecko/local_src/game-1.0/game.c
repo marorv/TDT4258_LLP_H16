@@ -116,8 +116,8 @@ int main(int argc, char *argv[])
 		}
 		if (j >= 180) j = 179;
 		if (j <= 0) j = 1;
-		drawPointer(j);
-		//drawBigCircle((int)prev_testball.pos_x, (int)prev_testball.pos_y, prev_testball.radius, prev_testball.colour);
+		drawPointer(j); //Skriver over ballen når den resettes
+		//drawBigCircle((int)testball.pos_x, (int)testball.pos_y, testball.radius, testball.colour); //Draw ball when interrupt driven
 
 	}
 
