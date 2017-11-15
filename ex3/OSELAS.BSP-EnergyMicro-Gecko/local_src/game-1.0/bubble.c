@@ -21,7 +21,7 @@
 #define handle_error(msg) \
 	do { perror(msg); exit(EXIT_FAILURE); } while (0)
 
-struct Ball { //Remember that now we always have to write "struct Ball" when making using this type
+struct Ball { 			//Remember that now we always have to write "struct Ball" when making using this type
 	double pos_x;		//Positios should be doubles, and only be converted to ints wen putting them on the board
 	double pos_y;
 	int direction;		

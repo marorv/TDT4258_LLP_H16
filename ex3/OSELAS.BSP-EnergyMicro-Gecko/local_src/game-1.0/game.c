@@ -58,6 +58,7 @@ int main(int argc, char *argv[])
 	testball.pos_y=HEIGHT-5;
 	testball.direction=0;
 	testball.radius = 9;
+	testball.moving = 0;
 	testball.colour = Pink;
 
 	struct Ball prev_testball;
@@ -66,10 +67,6 @@ int main(int argc, char *argv[])
 	
 	drawPlatform(WIDTH/2 - 15);
 	//drawPointer(testball.direction);
-
-	drawBigCircle((int)testball.pos_x, (int)testball.pos_y, testball.radius, testball.colour);
-
-	int k;
 
 	int j;
 	j = 90;
@@ -82,32 +79,45 @@ int main(int argc, char *argv[])
 
 			case LEFT_BUTTON:
 				j -= 10;
-				printf("Left button pressed\n");
+				//printf("Left button pressed\n");
 				break;
 			case RIGHT_BUTTON:
 				j += 10;
-				printf("Right button pressed\n");
+				//printf("Right button pressed\n");
 				break;
 			case SHOOT_BUTTON:
-				printf("Shoot button pressed\n");
+				//printf("Shoot button pressed\n");
 				testball.direction = j;
-				for(k=0; k<25; k++)
+				testball.moving = 1;
+				while(testball.moving == 1)
 				{
 					prev_testball.pos_x = testball.pos_x;
 					prev_testball.pos_y = testball.pos_y;
 					testball=moveBall(testball);
 					drawBigCircle((int)prev_testball.pos_x, (int)prev_testball.pos_y, prev_testball.radius, prev_testball.colour);
-					printf("Drawing testball at %d %d \n", (int)prev_testball.pos_y, (int)prev_testball.pos_x);
+					//printf("Drawing testball at %d %d \n", (int)prev_testball.pos_y, (int)prev_testball.pos_x);
 					drawBigCircle((int)testball.pos_x, (int)testball.pos_y, testball.radius, testball.colour);
+
+					//Check if top of screen reached
+					if (testball.pos_y-testball.radius <= 0) {
+						//Put back to start position
+						testball.moving = 0;
+						testball.pos_x=WIDTH/2;
+						testball.pos_y=HEIGHT-5;
+						drawBigCircle((int)testball.pos_x, (int)testball.pos_y, testball.radius, testball.colour);
+
+					}
 				}
 				break;
 			default:
-				printf("Buttons pressed: %x\n", buttons_pressed);
+				break;
+				//printf("Buttons pressed: %x\n", buttons_pressed);
 		
 		}
 		if (j >= 180) j = 179;
 		if (j <= 0) j = 1;
 		drawPointer(j);
+		//drawBigCircle((int)prev_testball.pos_x, (int)prev_testball.pos_y, prev_testball.radius, prev_testball.colour);
 
 	}
 
