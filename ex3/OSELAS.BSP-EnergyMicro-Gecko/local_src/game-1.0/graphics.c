@@ -14,9 +14,10 @@
 
 #include "graphics.h"
 
+//row ~ WIDTH ~ x; col ~ HEIGHT ~ y
 void writeRowCol2array(int row, int col, int16_t colour)
 {
-	screen[(row * WIDTH + 1) + col] = colour;
+	screen[col * WIDTH + row] = colour;
 
 }
 
@@ -33,7 +34,8 @@ void drawBigCircle(int start_row, int start_col, int radius, uint16_t colour)
 	}
 
 
-	update_display((start_col - radius), (start_row - radius), 2*(radius+1), 2*(radius+1));
+	//update_display((start_col - radius), (start_row - radius), 2*(radius+1), 2*(radius+1));
+	update_display(0, 0, WIDTH, HEIGHT);
 }
 
 void black_screen()
@@ -61,11 +63,11 @@ void drawPlatform(int origin_x)
 
 	int i;
 	int j;
-	for(i = origin_y; i < origin_y + platf_height; i++)
+	for(j = origin_y; j < origin_y + platf_height; j++)
 	{
-		for(j = origin_x; j < origin_x + platf_width; j++)
+		for(i = origin_x; i < origin_x + platf_width; i++)
 		{
-			writeRowCol2array(i, j, Maroon);
+			writeRowCol2array(i, j, Green);
 		}
 	}
 
@@ -81,24 +83,6 @@ void update_display(int in_dx, int in_dy, int in_width, int in_height)
 	area.width = in_width;
 	area.height = in_height;
 	ioctl(fd, 0x4680, &area);
-}
-
-void shooter()
-{
-	//Ball to fire should be sat at middle of screen, from bottom
-	int init_x = WIDTH/2;
-	int init_y = HEIGHT-(10+12); //10 off the ground pluss half the width og the ball of width 24.
-
-	//Direction is the output angle at which ball is shot out. 0 is straight left, 90 up, 180 straight right
-	//direction should be larger than 0 and smaller than 180
-	int direction = 90; //Start straight up.
-	if (direction < 0) direction = 0;
-	if (direction > 180) direction = 180;
-
-	//Place a ball pointing straight up at init_position
-	drawBigCircle(init_x, init_y, 5, Red);
-
-	//Push buttons to go left and right, up to fire
 }
 
 double deg_rad(int angle)
@@ -122,10 +106,10 @@ void drawPointer(int direction)
 {
 	int line_length = 50;
 	//Line originates at HEIGHT-(10+12), center of ball
-	int origin_x = HEIGHT - 5;
-	int origin_y = WIDTH/2;
+	int origin_x = WIDTH/2;
+	int origin_y = HEIGHT - 5;
 	//Start of line is outside of ball's radius
-	int start_x = HEIGHT - (10+24);
+	int start_x = origin_x;
 	int start_y = origin_y;
 	//End of line is at 10 distance away at angle direction
 	int end_x = end_x_calc(start_x, line_length, direction);

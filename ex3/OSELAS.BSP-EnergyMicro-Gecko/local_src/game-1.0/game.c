@@ -57,7 +57,7 @@ int main(int argc, char *argv[])
 	testball.pos_x=WIDTH/2;
 	testball.pos_y=HEIGHT-5;
 	testball.direction=0;
-	testball.radius = 5;
+	testball.radius = 9;
 	testball.colour = Pink;
 
 	struct Ball prev_testball;
@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
 	drawPlatform(WIDTH/2 - 15);
 	//drawPointer(testball.direction);
 
-	//drawBigCircle((int)testball.pos_y, (int)testball.pos_x, testball.radius, testball.colour);
+	drawBigCircle((int)testball.pos_x, (int)testball.pos_y, testball.radius, testball.colour);
 
 	int k;
 
@@ -79,11 +79,11 @@ int main(int argc, char *argv[])
 		switch(buttons_pressed){
 
 			case LEFT_BUTTON:
-				j += 10;
+				j -= 10;
 				printf("Left button pressed\n");
 				break;
 			case RIGHT_BUTTON:
-				j -= 10;
+				j += 10;
 				printf("Right button pressed\n");
 				break;
 			case SHOOT_BUTTON:
@@ -94,17 +94,17 @@ int main(int argc, char *argv[])
 					prev_testball = testball;
 					prev_testball.colour = Black;
 					testball=moveBall(testball);
-					drawBigCircle((int)prev_testball.pos_y, (int)prev_testball.pos_x, prev_testball.radius, prev_testball.colour);
+					drawBigCircle((int)prev_testball.pos_x, (int)prev_testball.pos_y, prev_testball.radius, prev_testball.colour);
 					printf("Drawing testball at %d %d \n", (int)prev_testball.pos_y, (int)prev_testball.pos_x);
-					drawBigCircle((int)testball.pos_y, (int)testball.pos_x, testball.radius, testball.colour);
+					drawBigCircle((int)testball.pos_x, (int)testball.pos_y, testball.radius, testball.colour);
 				}
 				break;
 			default:
 				printf("Buttons pressed: %x\n", buttons_pressed);
 		
 		}
-		if (j >= 90) j = 89;
-		if (j <= -90) j = -89;
+		if (j >= 180) j = 179;
+		if (j <= 0) j = 1;
 		drawPointer(j);
 
 	}
