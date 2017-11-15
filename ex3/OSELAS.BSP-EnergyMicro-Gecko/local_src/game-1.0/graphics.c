@@ -34,8 +34,8 @@ void drawBigCircle(int start_row, int start_col, int radius, uint16_t colour)
 	}
 
 
-	//update_display((start_col - radius), (start_row - radius), 2*(radius+1), 2*(radius+1));
-	update_display(0, 0, WIDTH, HEIGHT);
+	update_display((start_row - radius-1), (start_col - radius-1), 2*(radius+1), 2*(radius+1));
+	//update_display(0, 0, WIDTH, HEIGHT);
 }
 
 void black_screen()
@@ -104,6 +104,16 @@ int end_y_calc(int start_y, int line_length, int direction)
 //Draw a line (pointer) of length 10 (plus 12, because beginning behind ball) that points in shooting direction
 void drawPointer(int direction)
 {
+	//Erase old pointer before drawing new one
+	int i, j; 
+	for (i = WIDTH/2-50; i < (WIDTH/2-50)+100; i++)
+	{
+		for (j = HEIGHT-50; j < HEIGHT-5; j++) 
+		{
+			writeRowCol2array(i, j, Black);
+		}
+	}
+
 	int line_length = 50;
 	//Line originates at HEIGHT-(10+12), center of ball
 	int origin_x = WIDTH/2;
@@ -111,12 +121,9 @@ void drawPointer(int direction)
 	//Start of line is outside of ball's radius
 	int start_x = origin_x;
 	int start_y = origin_y;
-	//End of line is at 10 distance away at angle direction
-	int end_x = end_x_calc(start_x, line_length, direction);
-	int end_y = end_y_calc(start_y, line_length, direction);
 
 	//Draw the line
-	int i = 0;
+	i = 0;
 	for(i = 0; i < line_length; i++)
 	{
 		int end_x = end_x_calc(origin_x, i, direction);
@@ -124,37 +131,16 @@ void drawPointer(int direction)
 		writeRowCol2array(end_x, end_y, Red);
 	}
 
-	//Find minimally updateable square
-	int min_x, min_y, max_x, max_y;
-	if (end_x < start_x) 
-	{
-		min_x = end_x;
-		max_x = start_x;
-	} 
-	else
-	{ 
-		min_x = start_x;
-		max_x = end_x;
-	}
-
-	if (end_y < start_y) min_y = end_y;
-	else min_y = start_y;
-	
-	max_y = start_y; //Always at start anyways
-
-	//update_display(min_x, min_y, max_x-min_x, max_y-min_y);
-
 	update_display(WIDTH/2-50, HEIGHT-50, 100, 50);
 }
 
 struct Ball moveBall(struct Ball ball)
 {
-	//90 is right, 0 is up and -90 is left
 	//Moves ball speed pixels in direction per call
 	struct Ball ret_ball = ball;
 	int speed = ret_ball.radius;
-	double angle = deg_rad(ret_ball.direction-90);
-	ret_ball.pos_x += speed*cos(angle);
+	double angle = deg_rad(ret_ball.direction);
+	ret_ball.pos_x -= speed*cos(angle);
 	ret_ball.pos_y -= speed*sin(angle);
 
 	//Handle encountering a wall or reacing top of screen.

@@ -61,6 +61,8 @@ int main(int argc, char *argv[])
 	testball.colour = Pink;
 
 	struct Ball prev_testball;
+	prev_testball = testball;
+	prev_testball.colour = Black;
 	
 	drawPlatform(WIDTH/2 - 15);
 	//drawPointer(testball.direction);
@@ -70,7 +72,7 @@ int main(int argc, char *argv[])
 	int k;
 
 	int j;
-	j = 0;
+	j = 90;
 	uint16_t buttons_pressed;
 	while(1)
 	{
@@ -91,8 +93,8 @@ int main(int argc, char *argv[])
 				testball.direction = j;
 				for(k=0; k<25; k++)
 				{
-					prev_testball = testball;
-					prev_testball.colour = Black;
+					prev_testball.pos_x = testball.pos_x;
+					prev_testball.pos_y = testball.pos_y;
 					testball=moveBall(testball);
 					drawBigCircle((int)prev_testball.pos_x, (int)prev_testball.pos_y, prev_testball.radius, prev_testball.colour);
 					printf("Drawing testball at %d %d \n", (int)prev_testball.pos_y, (int)prev_testball.pos_x);
