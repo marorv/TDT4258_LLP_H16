@@ -27,6 +27,7 @@
 #define FILESIZE (153598) //16 bits per pixel
 
 void black_screen();
+void drawSquare(int row, int column, uint16_t colour);
 void drawBigCircle(int row, int column, int raduis, uint16_t colour);
 void update_display(int in_dx, int in_dy, int in_width, int in_height);
 void writeRowCol2array(int row, int col, int16_t colour);
@@ -38,6 +39,7 @@ int end_x_calc(int start_x, int line_length, int direction);
 int end_y_calc(int start_y, int line_length, int direction);
 double deg_rad(int angle); //Converts angle degrees to radians
 struct Ball moveBall(struct Ball ball);
+struct Square moveSquare(struct Square square);
 
 //From bubble.c
 struct Ball { //Remember that now we always have to write "struct Ball" when making using this type

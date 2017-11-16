@@ -53,20 +53,31 @@ int main(int argc, char *argv[])
 	drawBigCircle(220, 70, 50, Navy);
 
 
-	struct Ball testball;
-	testball.pos_x=WIDTH/2;
-	testball.pos_y=HEIGHT-5;
-	testball.direction=0;
-	testball.radius = 9;
-	testball.moving = 0;
-	testball.colour = Pink;
+	struct Ball ball;
+	ball.pos_x=WIDTH/2;
+	ball.pos_y=HEIGHT-5;
+	ball.direction=0;
+	ball.radius = 9;
+	ball.moving = 0;
+	ball.colour = Pink;
 
-	struct Ball prev_testball;
-	prev_testball = testball;
-	prev_testball.colour = Black;
+	struct Ball prev_ball;
+	prev_ball = ball;
+	prev_ball.colour = Black;
+
+	struct Square square;
+	square.pos_x=WIDTH/2;
+	square.pos_y=HEIGHT-5;
+	square.direction=0;
+	square.moving = 0;
+	square.colour = Pink;
+
+	struct Square prev_square;
+	prev_square = square;
+	prev_square.colour = Black;
 	
 	drawPlatform(WIDTH/2 - 15);
-	//drawPointer(testball.direction);
+	//drawPointer(ball.direction);
 
 	int j;
 	j = 90;
@@ -89,26 +100,27 @@ int main(int argc, char *argv[])
 				drawPointer(j);
 				//printf("Right button pressed\n");
 				break;
+
 			case SHOOT_BUTTON:
 				//printf("Shoot button pressed\n");
-				testball.direction = j;
-				testball.moving = 1;
-				while(testball.moving == 1)
+				square.direction = j;
+				square.moving = 1;
+				while(ball.moving == 1)
 				{
-					prev_testball.pos_x = testball.pos_x;
-					prev_testball.pos_y = testball.pos_y;
-					testball=moveBall(testball);
-					drawBigCircle((int)prev_testball.pos_x, (int)prev_testball.pos_y, prev_testball.radius, prev_testball.colour);
-					//printf("Drawing testball at %d %d \n", (int)prev_testball.pos_y, (int)prev_testball.pos_x);
-					drawBigCircle((int)testball.pos_x, (int)testball.pos_y, testball.radius, testball.colour);
+					prev_square.pos_x = square.pos_x;
+					prev_square.pos_y = square.pos_y;
+					square=moveSquare(square);
+					drawSquare((int)prev_square.pos_x, (int)prev_square.pos_y, prev_square.colour);
+					//printf("Drawing ball at %d %d \n", (int)prev_ball.pos_y, (int)prev_ball.pos_x);
+					drawSquare((int)square.pos_x, (int)square.pos_y, square.colour);
 
-					//Check if top of screen reached
-					if (testball.pos_y-testball.radius <= 0) {
+					//Check if top or bottom of screen reached
+					if (square.pos_y <= 0 || square.pos_y >= HEIGHT) {
 						//Put back to start position
-						testball.moving = 0;
-						testball.pos_x=WIDTH/2;
-						testball.pos_y=HEIGHT-5;
-						drawBigCircle((int)testball.pos_x, (int)testball.pos_y, testball.radius, testball.colour);
+						square.moving = 0;
+						square.pos_x=WIDTH/2;
+						square.pos_y=HEIGHT-5;
+						drawSquare((int)square.pos_x, (int)square.pos_y, square.colour);
 
 					}
 				}
@@ -118,7 +130,7 @@ int main(int argc, char *argv[])
 				//printf("Buttons pressed: %x\n", buttons_pressed);
 		
 		}//Skriver over ballen når den resettes
-		//drawBigCircle((int)testball.pos_x, (int)testball.pos_y, testball.radius, testball.colour); //Draw ball when interrupt driven
+		//drawBigCircle((int)ball.pos_x, (int)ball.pos_y, ball.radius, ball.colour); //Draw ball when interrupt driven
 
 	}
 

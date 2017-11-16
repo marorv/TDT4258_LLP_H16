@@ -158,7 +158,7 @@ struct Ball moveBall(struct Ball ball)
 	return ret_ball;
 }
 
-void drawSquare(int start_row, int start_col, int radius, uint16_t colour)
+void drawSquare(int start_row, int start_col, uint16_t colour)
 {
 	//Draw the circle
 	int i, k;
@@ -174,4 +174,28 @@ void drawSquare(int start_row, int start_col, int radius, uint16_t colour)
 
 	update_display(start_row, start_col, start_row+6, start_col+6);
 
+}
+
+struct Square moveSquare(struct Square square)
+{
+	//Moves ball speed pixels in direction per call
+	struct Square ret_square = square;
+	int speed = 15;
+	double angle = deg_rad(ret_square.direction);
+	ret_square.pos_x -= speed*cos(angle);
+	ret_square.pos_y -= speed*sin(angle);
+
+	//Handle encountering a wall or reacing top of screen.
+	//Reached left wall
+	if (ret_square.pos_x <= 0)
+	{
+		ret_square.direction = 180 - ret_square.direction;
+	}
+	//Reach right wall
+	if (ret_square.pos_x >= WIDTH)
+	{
+		ret_square.direction += 90;
+	}
+
+	return ret_square;
 }
