@@ -87,11 +87,12 @@ printk(KERN_ALERT "Attempting to load gamepad driver module\n");
 
     iowrite32(0xFF, GPIO_EXTIFALL);
     iowrite32(0xFF, GPIO_EXTIRISE);
+    /*
     iowrite32(0xFF, GPIO_EXTIRISE);
     iowrite32(0xFF, GPIO_EXTIRISE);
     iowrite32(0x1802, ISER0);
     iowrite32(GPIO_IFC, GPIO_IF);
-
+    */
 
     /* add device */
     cdev_init(&gamepad_cdev, &game_fops);
@@ -101,7 +102,7 @@ printk(KERN_ALERT "Attempting to load gamepad driver module\n");
     device_create(cl, NULL, device_nr, NULL, DRIVER_NAME);
 
     //Interrupt request
-    request_irq(GPIO_EVEN_IRQ_LINE, (irq_handler_t)GPIO_EVEN_IRQHandler, 0, DRIVER_NAME, &gamepad_cdev);
+    //request_irq(GPIO_EVEN_IRQ_LINE, (irq_handler_t)GPIO_EVEN_IRQHandler, 0, DRIVER_NAME, &gamepad_cdev);
 
 
     printk(KERN_INFO "Gamepad driver loaded.\n");

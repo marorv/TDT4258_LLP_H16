@@ -4,11 +4,6 @@
 #include "efm32gg.h"
 #include "graphics.h"
 
-void __attribute__ ((interrupt)) TIMER1_IRQHandler() {  
-    /* Clear interrupt flag */
-    *TIMER1_IFC = 1;
-}
-
 void GPIO_Handler() {
     printf("Handler");
 }
