@@ -79,10 +79,14 @@ int main(int argc, char *argv[])
 
 			case LEFT_BUTTON:
 				j -= 10;
+				if (j <= 0) j = 1;
+				drawPointer(j);
 				//printf("Left button pressed\n");
 				break;
 			case RIGHT_BUTTON:
 				j += 10;
+				if (j >= 180) j = 179; 
+				drawPointer(j);
 				//printf("Right button pressed\n");
 				break;
 			case SHOOT_BUTTON:
@@ -113,10 +117,7 @@ int main(int argc, char *argv[])
 				break;
 				//printf("Buttons pressed: %x\n", buttons_pressed);
 		
-		}
-		if (j >= 180) j = 179;
-		if (j <= 0) j = 1;
-		drawPointer(j); //Skriver over ballen når den resettes
+		}//Skriver over ballen når den resettes
 		//drawBigCircle((int)testball.pos_x, (int)testball.pos_y, testball.radius, testball.colour); //Draw ball when interrupt driven
 
 	}
