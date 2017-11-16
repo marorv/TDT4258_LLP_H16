@@ -13,6 +13,7 @@
 #include <linux/uaccess.h> //copy_to_user
 #include <asm/io.h>
 #include <linux/ioport.h>
+#include <linux/interrupt.h>
 
 #include "efm32gg.h"
 
@@ -82,6 +83,15 @@ printk(KERN_ALERT "Attempting to load gamepad driver module\n");
     iowrite32(0xFF, GPIO_PC_DOUT);
 	iowrite32(0x22222222, GPIO_EXTIPSELL);
 
+    //NVIC stuff??
+
+    iowrite32(0xFF, GPIO_EXTIFALL);
+    iowrite32(0xFF, GPIO_EXTIRISE);
+    iowrite32(0xFF, GPIO_EXTIRISE);
+    iowrite32(0xFF, GPIO_EXTIRISE);
+    iowrite32(0x1802, ISER0);
+    iowrite32(GPIO_IFC, GPIO_IF);
+
 
     /* add device */
     cdev_init(&gamepad_cdev, &game_fops);
@@ -89,6 +99,10 @@ printk(KERN_ALERT "Attempting to load gamepad driver module\n");
     cdev_add(&gamepad_cdev, device_nr, DEV_NR_COUNT);
     cl = class_create(THIS_MODULE, DRIVER_NAME);
     device_create(cl, NULL, device_nr, NULL, DRIVER_NAME);
+
+    //Interrupt request
+    request_irq(GPIO_EVEN_IRQ_LINE, (irq_handler_t)GPIO_EVEN_IRQHandler, 0, DRIVER_NAME, &gamepad_cdev);
+
 
     printk(KERN_INFO "Gamepad driver loaded.\n");
 
