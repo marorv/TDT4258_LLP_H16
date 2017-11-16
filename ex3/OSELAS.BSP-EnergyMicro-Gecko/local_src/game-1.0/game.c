@@ -24,8 +24,10 @@
 
 void deinit_devices();
 void init_devices();
+void hitGoal();
 uint16_t GPIO_handler();
 
+int hits;
 
 
 int main(int argc, char *argv[])
@@ -44,14 +46,9 @@ int main(int argc, char *argv[])
 	init_devices();
 
 	black_screen();
+	hits = 0;
 
-
-	drawBigCircle(30, 50, 10, Pink);
-	
-	drawBigCircle(120, 70, 15, Green);
-
-	drawBigCircle(220, 70, 50, Navy);
-
+	hitGoal();
 
 	struct Ball ball;
 	ball.pos_x=WIDTH/2;
@@ -60,10 +57,6 @@ int main(int argc, char *argv[])
 	ball.radius = 9;
 	ball.moving = 0;
 	ball.colour = Pink;
-
-	struct Ball prev_ball;
-	prev_ball = ball;
-	prev_ball.colour = Black;
 
 	struct Square square;
 	square.pos_x=WIDTH/2;
@@ -75,12 +68,12 @@ int main(int argc, char *argv[])
 	struct Square prev_square;
 	prev_square = square;
 	prev_square.colour = Black;
-	
-	drawPlatform(WIDTH/2 - 15);
-	//drawPointer(ball.direction);
 
 	int j;
 	j = 90;
+	drawPointer(j);
+	drawPlatform(WIDTH/2 - 15);	
+
 	uint16_t buttons_pressed;
 	while(1)
 	{
@@ -89,13 +82,13 @@ int main(int argc, char *argv[])
 		switch(buttons_pressed){
 
 			case LEFT_BUTTON:
-				j -= 10;
+				j -= 5;
 				if (j <= 0) j = 1;
 				drawPointer(j);
 				//printf("Left button pressed\n");
 				break;
 			case RIGHT_BUTTON:
-				j += 10;
+				j += 5;
 				if (j >= 180) j = 179; 
 				drawPointer(j);
 				//printf("Right button pressed\n");
@@ -105,17 +98,33 @@ int main(int argc, char *argv[])
 				//printf("Shoot button pressed\n");
 				square.direction = j;
 				square.moving = 1;
-				while(ball.moving == 1)
+				while(square.moving == 1)
 				{
 					prev_square.pos_x = square.pos_x;
 					prev_square.pos_y = square.pos_y;
-					square=moveSquare(square);
+					square = moveSquare(square);
+
+					//Check if goal hit
+					if(screen[(int)square.pos_y * WIDTH + (int)square.pos_x] == Orange)
+					{
+						//printf("Hit at %d, %d, %d\n", (int)square.pos_y * WIDTH + (int)square.pos_x, (int)square.pos_x, (int)square.pos_y);
+						hitGoal();
+						drawSquare((int)prev_square.pos_x, (int)prev_square.pos_y, prev_square.colour);
+						//Put back to start position
+						square.moving = 0;
+						square.pos_x=WIDTH/2;
+						square.pos_y=HEIGHT-5;
+						drawSquare((int)square.pos_x, (int)square.pos_y, square.colour);
+					}
+
 					drawSquare((int)prev_square.pos_x, (int)prev_square.pos_y, prev_square.colour);
 					//printf("Drawing ball at %d %d \n", (int)prev_ball.pos_y, (int)prev_ball.pos_x);
 					drawSquare((int)square.pos_x, (int)square.pos_y, square.colour);
+					
 
 					//Check if top or bottom of screen reached
 					if (square.pos_y <= 0 || square.pos_y >= HEIGHT) {
+						drawSquare((int)prev_square.pos_x, (int)prev_square.pos_y, prev_square.colour);
 						//Put back to start position
 						square.moving = 0;
 						square.pos_x=WIDTH/2;
@@ -124,13 +133,14 @@ int main(int argc, char *argv[])
 
 					}
 				}
+				drawPointer(j);	
+				drawPlatform(WIDTH/2 - 15);
 				break;
 			default:
 				break;
 				//printf("Buttons pressed: %x\n", buttons_pressed);
 		
-		}//Skriver over ballen når den resettes
-		//drawBigCircle((int)ball.pos_x, (int)ball.pos_y, ball.radius, ball.colour); //Draw ball when interrupt driven
+		}
 
 	}
 
@@ -138,6 +148,22 @@ int main(int argc, char *argv[])
 	deinit_devices();
 	exit(EXIT_SUCCESS);
 
+}
+
+void hitGoal()
+{
+	if(hits % 2 == 0) 
+	{
+		//Hit the circle, erase it, draw new one
+		drawBigCircle(220, 70, 30, Black);
+		drawBigCircle(50, 70, 30, Orange);
+	} 
+	else
+	{
+		drawBigCircle(50, 70, 30, Black);
+		drawBigCircle(220, 70, 30, Orange);
+	}
+	hits++;
 }
 
 uint16_t GPIO_handler()

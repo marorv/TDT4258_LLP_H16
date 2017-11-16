@@ -51,6 +51,15 @@ struct Ball { //Remember that now we always have to write "struct Ball" when mak
 	int moving; 		//boolean value to indicate whether ball moving or not (whether shoot button pressed)
 };
 
+struct Square { //Remember that now we always have to write "struct Ball" when making using this type
+	double pos_x;		//Positios should be doubles, and only be converted to ints wen putting them on the board
+	double pos_y;
+	int direction;		
+	uint16_t colour; 	//like 0x7BE0
+	int radius;			//Counting the middle pixel. Should be odd to have single center pixel
+	int moving; 		//boolean value to indicate whether ball moving or not (whether shoot button pressed)
+};
+
 struct fb_copyarea area;
 uint16_t *screen;
 int fd;

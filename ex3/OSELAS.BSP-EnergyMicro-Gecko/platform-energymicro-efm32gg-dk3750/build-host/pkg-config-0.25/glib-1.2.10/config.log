@@ -421,7 +421,7 @@ configure:12405: $? = 0
 configure:12405: result: yes
 configure:12411: checking for _doprnt
 configure:12411: gcc -o conftest -g -O2 -Wall   conftest.c  >&5
-/tmp/cc2vu0CW.o: In function `main':
+/tmp/ccPMVuRs.o: In function `main':
 /home/tdt4258/TDT4258_LLP_H17/ex3/OSELAS.BSP-EnergyMicro-Gecko/platform-energymicro-efm32gg-dk3750/build-host/pkg-config-0.25/glib-1.2.10/conftest.c:63: undefined reference to `_doprnt'
 collect2: ld returned 1 exit status
 configure:12411: $? = 1
@@ -883,7 +883,7 @@ configure:13657: $? = 0
 configure:13683: result: yes
 configure:13693: checking for dlopen
 configure:13693: gcc -o conftest -g -O2 -Wall   conftest.c  >&5
-/tmp/ccGVhQ3x.o: In function `main':
+/tmp/ccAPpXOp.o: In function `main':
 /home/tdt4258/TDT4258_LLP_H17/ex3/OSELAS.BSP-EnergyMicro-Gecko/platform-energymicro-efm32gg-dk3750/build-host/pkg-config-0.25/glib-1.2.10/conftest.c:106: undefined reference to `dlopen'
 collect2: ld returned 1 exit status
 configure:13693: $? = 1

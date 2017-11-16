@@ -21,6 +21,8 @@ void writeRowCol2array(int row, int col, int16_t colour)
 
 }
 
+
+
 //First value is y-value
 void drawBigCircle(int start_row, int start_col, int radius, uint16_t colour)
 {
@@ -108,7 +110,7 @@ void drawPointer(int direction)
 	int i, j; 
 	for (i = WIDTH/2-50; i < (WIDTH/2-50)+100; i++)
 	{
-		for (j = HEIGHT-50; j < HEIGHT-5; j++) 
+		for (j = HEIGHT-55; j < HEIGHT-5; j++) 
 		{
 			writeRowCol2array(i, j, Black);
 		}
@@ -118,9 +120,6 @@ void drawPointer(int direction)
 	//Line originates at HEIGHT-(10+12), center of ball
 	int origin_x = WIDTH/2;
 	int origin_y = HEIGHT - 5;
-	//Start of line is outside of ball's radius
-	int start_x = origin_x;
-	int start_y = origin_y;
 
 	//Draw the line
 	i = 0;
@@ -131,14 +130,15 @@ void drawPointer(int direction)
 		writeRowCol2array(end_x, end_y, Red);
 	}
 
-	update_display(WIDTH/2-50, HEIGHT-50, 100, 50);
+	update_display(WIDTH/2-50, HEIGHT-70, 100, 70);
 }
 
 struct Ball moveBall(struct Ball ball)
 {
 	//Moves ball speed pixels in direction per call
 	struct Ball ret_ball = ball;
-	int speed = 15;
+	int speed = 1;
+
 	double angle = deg_rad(ret_ball.direction);
 	ret_ball.pos_x -= speed*cos(angle);
 	ret_ball.pos_y -= speed*sin(angle);
@@ -160,41 +160,44 @@ struct Ball moveBall(struct Ball ball)
 
 void drawSquare(int start_row, int start_col, uint16_t colour)
 {
-	//Draw the circle
+	//Draw the square
 	int i, k;
-	for(i = 0; i <= 5; i++)
+	for(i = 0; i < 5; i++)
 	{
-		for(k=0; k <= 5; k++){
+		for(k = 0; k < 5; k++){
 
-			writeRowCol2array(start_row+i, start_col+k, colour);
+			writeRowCol2array(start_row + i, start_col + k, colour);
 		}	
-		
 	}
 
-
-	update_display(start_row, start_col, start_row+6, start_col+6);
+	update_display(start_row, start_col, 6, 6);
 
 }
 
 struct Square moveSquare(struct Square square)
 {
-	//Moves ball speed pixels in direction per call
+	//Moves square speed pixels in direction per call
 	struct Square ret_square = square;
-	int speed = 15;
+	int speed = 1;
+
+	if(ret_square.direction <= 0)
+	{
+		ret_square.direction = 1;
+	}
+	if(ret_square.direction >= 180)
+	{
+		ret_square.direction = 179;
+	}
+
 	double angle = deg_rad(ret_square.direction);
 	ret_square.pos_x -= speed*cos(angle);
 	ret_square.pos_y -= speed*sin(angle);
 
 	//Handle encountering a wall or reacing top of screen.
-	//Reached left wall
-	if (ret_square.pos_x <= 0)
+	//Reach wall
+	if (ret_square.pos_x <= 0 || ret_square.pos_x >= WIDTH)
 	{
 		ret_square.direction = 180 - ret_square.direction;
-	}
-	//Reach right wall
-	if (ret_square.pos_x >= WIDTH)
-	{
-		ret_square.direction += 90;
 	}
 
 	return ret_square;
