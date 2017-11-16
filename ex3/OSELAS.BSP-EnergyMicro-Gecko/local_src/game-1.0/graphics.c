@@ -157,3 +157,21 @@ struct Ball moveBall(struct Ball ball)
 
 	return ret_ball;
 }
+
+void drawSquare(int start_row, int start_col, int radius, uint16_t colour)
+{
+	//Draw the circle
+	int i, k;
+	for(i = 0; i <= 5; i++)
+	{
+		for(k=0; k <= 5; k++){
+
+			writeRowCol2array(start_row+i, start_col+k, colour);
+		}	
+		
+	}
+
+
+	update_display(start_row, start_col, start_row+6, start_col+6);
+
+}
