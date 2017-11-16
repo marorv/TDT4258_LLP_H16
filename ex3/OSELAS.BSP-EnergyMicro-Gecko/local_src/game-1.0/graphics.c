@@ -18,12 +18,24 @@
 void writeRowCol2array(int row, int col, int16_t colour)
 {
 	screen[col * WIDTH + row] = colour;
-
 }
 
+void hitGoal()
+{
+	if(hits % 2 == 0) 
+	{
+		//Hit the circle, erase it, draw new one
+		drawBigCircle(220, 70, 30, Black);
+		drawBigCircle(50, 70, 30, Orange);
+	} 
+	else
+	{
+		drawBigCircle(50, 70, 30, Black);
+		drawBigCircle(220, 70, 30, Orange);
+	}
+	hits++;
+}
 
-
-//First value is y-value
 void drawBigCircle(int start_row, int start_col, int radius, uint16_t colour)
 {
 	//Draw the circle
@@ -37,7 +49,6 @@ void drawBigCircle(int start_row, int start_col, int radius, uint16_t colour)
 
 
 	update_display((start_row - radius-1), (start_col - radius-1), 2*(radius+1), 2*(radius+1));
-	//update_display(0, 0, WIDTH, HEIGHT);
 }
 
 void black_screen()
@@ -54,17 +65,15 @@ void black_screen()
 
 void drawPlatform(int origin_x)
 {
-	//int origin_x;
 	int origin_y;
 	int platf_width;
 	int platf_height;
-	//origin_x = WIDTH/2 - 15;
+
 	origin_y = HEIGHT - 5;
 	platf_width = 30;
 	platf_height = 5;
 
-	int i;
-	int j;
+	int i, j;
 	for(j = origin_y; j < origin_y + platf_height; j++)
 	{
 		for(i = origin_x; i < origin_x + platf_width; i++)
@@ -72,7 +81,6 @@ void drawPlatform(int origin_x)
 			writeRowCol2array(i, j, Green);
 		}
 	}
-
 	update_display(origin_x, origin_y, platf_width, platf_height);
 
 }
@@ -103,7 +111,7 @@ int end_y_calc(int start_y, int line_length, int direction)
 	return start_y - (int)line_length * sin(deg_rad(direction));
 }
 
-//Draw a line (pointer) of length 10 (plus 12, because beginning behind ball) that points in shooting direction
+//Draw a line (pointer) of length line_length that points in shooting direction
 void drawPointer(int direction)
 {
 	//Erase old pointer before drawing new one
@@ -117,7 +125,6 @@ void drawPointer(int direction)
 	}
 
 	int line_length = 50;
-	//Line originates at HEIGHT-(10+12), center of ball
 	int origin_x = WIDTH/2;
 	int origin_y = HEIGHT - 5;
 
@@ -129,11 +136,10 @@ void drawPointer(int direction)
 		int end_y = end_y_calc(origin_y, i, direction);
 		writeRowCol2array(end_x, end_y, Red);
 	}
-
 	update_display(WIDTH/2-50, HEIGHT-70, 100, 70);
 }
 
-struct Ball moveBall(struct Ball ball)
+struct Ball moveBall(struct Ball ball) //NOT IN USE
 {
 	//Moves ball speed pixels in direction per call
 	struct Ball ret_ball = ball;
@@ -143,8 +149,7 @@ struct Ball moveBall(struct Ball ball)
 	ret_ball.pos_x -= speed*cos(angle);
 	ret_ball.pos_y -= speed*sin(angle);
 
-	//Handle encountering a wall or reacing top of screen.
-	//Reached left wall
+	//Handle encountering a wall
 	if (ret_ball.pos_x - ret_ball.radius <= 0)
 	{
 		ret_ball.direction = 180 - ret_ball.direction;
@@ -164,14 +169,12 @@ void drawSquare(int start_row, int start_col, uint16_t colour)
 	int i, k;
 	for(i = 0; i < 5; i++)
 	{
-		for(k = 0; k < 5; k++){
-
+		for(k = 0; k < 5; k++)
+		{
 			writeRowCol2array(start_row + i, start_col + k, colour);
 		}	
 	}
-
 	update_display(start_row, start_col, 6, 6);
-
 }
 
 struct Square moveSquare(struct Square square)
@@ -184,7 +187,8 @@ struct Square moveSquare(struct Square square)
 	{
 		ret_square.direction = 1;
 	}
-	if(ret_square.direction >= 180)
+
+	if (ret_square.direction >= 180)
 	{
 		ret_square.direction = 179;
 	}
@@ -193,12 +197,10 @@ struct Square moveSquare(struct Square square)
 	ret_square.pos_x -= speed*cos(angle);
 	ret_square.pos_y -= speed*sin(angle);
 
-	//Handle encountering a wall or reacing top of screen.
-	//Reach wall
+	//Handle encountering a wall
 	if (ret_square.pos_x <= 0 || ret_square.pos_x >= WIDTH)
 	{
 		ret_square.direction = 180 - ret_square.direction;
 	}
-
 	return ret_square;
 }

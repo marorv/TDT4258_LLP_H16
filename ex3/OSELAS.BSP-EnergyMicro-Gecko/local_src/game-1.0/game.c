@@ -24,10 +24,7 @@
 
 void deinit_devices();
 void init_devices();
-void hitGoal();
 uint16_t GPIO_handler();
-
-int hits;
 
 
 int main(int argc, char *argv[])
@@ -35,28 +32,11 @@ int main(int argc, char *argv[])
 
 	printf("Hello World, I'm game!\n");
 
-
-	/*The following program prints part of the file specified in its first
-       command-line argument to standard output.  The range of bytes to be
-       printed is specified via offset and length values in the second and
-       third command-line arguments.  The program creates a memory mapping
-       of the required pages of the file and then uses write(2) to output
-       the desired bytes.
-	*/
 	init_devices();
 
 	black_screen();
 	hits = 0;
-
 	hitGoal();
-
-	struct Ball ball;
-	ball.pos_x=WIDTH/2;
-	ball.pos_y=HEIGHT-5;
-	ball.direction=0;
-	ball.radius = 9;
-	ball.moving = 0;
-	ball.colour = Pink;
 
 	struct Square square;
 	square.pos_x=WIDTH/2;
@@ -85,17 +65,15 @@ int main(int argc, char *argv[])
 				j -= 5;
 				if (j <= 0) j = 1;
 				drawPointer(j);
-				//printf("Left button pressed\n");
 				break;
+
 			case RIGHT_BUTTON:
 				j += 5;
 				if (j >= 180) j = 179; 
 				drawPointer(j);
-				//printf("Right button pressed\n");
 				break;
 
 			case SHOOT_BUTTON:
-				//printf("Shoot button pressed\n");
 				square.direction = j;
 				square.moving = 1;
 				while(square.moving == 1)
@@ -107,7 +85,6 @@ int main(int argc, char *argv[])
 					//Check if goal hit
 					if(screen[(int)square.pos_y * WIDTH + (int)square.pos_x] == Orange)
 					{
-						//printf("Hit at %d, %d, %d\n", (int)square.pos_y * WIDTH + (int)square.pos_x, (int)square.pos_x, (int)square.pos_y);
 						hitGoal();
 						drawSquare((int)prev_square.pos_x, (int)prev_square.pos_y, prev_square.colour);
 						//Put back to start position
@@ -121,7 +98,6 @@ int main(int argc, char *argv[])
 					//printf("Drawing ball at %d %d \n", (int)prev_ball.pos_y, (int)prev_ball.pos_x);
 					drawSquare((int)square.pos_x, (int)square.pos_y, square.colour);
 					
-
 					//Check if top or bottom of screen reached
 					if (square.pos_y <= 0 || square.pos_y >= HEIGHT) {
 						drawSquare((int)prev_square.pos_x, (int)prev_square.pos_y, prev_square.colour);
@@ -137,33 +113,13 @@ int main(int argc, char *argv[])
 				drawPlatform(WIDTH/2 - 15);
 				break;
 			default:
-				break;
-				//printf("Buttons pressed: %x\n", buttons_pressed);
-		
+				break;		
 		}
-
 	}
-
 
 	deinit_devices();
 	exit(EXIT_SUCCESS);
 
-}
-
-void hitGoal()
-{
-	if(hits % 2 == 0) 
-	{
-		//Hit the circle, erase it, draw new one
-		drawBigCircle(220, 70, 30, Black);
-		drawBigCircle(50, 70, 30, Orange);
-	} 
-	else
-	{
-		drawBigCircle(50, 70, 30, Black);
-		drawBigCircle(220, 70, 30, Orange);
-	}
-	hits++;
 }
 
 uint16_t GPIO_handler()

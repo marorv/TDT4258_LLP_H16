@@ -41,6 +41,9 @@ double deg_rad(int angle); //Converts angle degrees to radians
 struct Ball moveBall(struct Ball ball);
 struct Square moveSquare(struct Square square);
 
+void hitGoal();
+int hits;
+
 //From bubble.c
 struct Ball { //Remember that now we always have to write "struct Ball" when making using this type
 	double pos_x;		//Positios should be doubles, and only be converted to ints wen putting them on the board
