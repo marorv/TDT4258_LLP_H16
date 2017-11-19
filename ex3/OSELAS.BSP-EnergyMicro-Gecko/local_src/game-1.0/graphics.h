@@ -26,6 +26,11 @@
 #define NUMPIXELS  (76799) //320*240-1
 #define FILESIZE (153598) //16 bits per pixel
 
+#define LEFT_BUTTON 0xFE00
+#define RIGHT_BUTTON 0xFB00
+#define SHOOT_BUTTON 0xBF00
+#define END_BUTTON 0x7F00
+
 void black_screen();
 void drawSquare(int row, int column, uint16_t colour);
 void drawBigCircle(int row, int column, int raduis, uint16_t colour);
@@ -71,6 +76,14 @@ int gpio_fd;
 FILE* device;
 struct stat sb;
 uint16_t read_buf;
+
+void deinit_devices();
+void init_devices();
+uint16_t GPIO_handler();
+
+void sigio_handler(int signo);
+void play(void);
+void exit_main(void);
 
 int j;
 uint16_t buttons_pressed;

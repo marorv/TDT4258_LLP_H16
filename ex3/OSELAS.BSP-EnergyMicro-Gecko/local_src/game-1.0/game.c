@@ -18,22 +18,8 @@
 #include "graphics.h"
 #include "efm32gg.h"
 
-#define LEFT_BUTTON 0xFE00
-#define RIGHT_BUTTON 0xFB00
-#define SHOOT_BUTTON 0xBF00
-#define END_BUTTON 0x7F00
-
 #define handle_error(msg) \
 	do { perror(msg); exit(EXIT_FAILURE); } while (0)
-
-
-void deinit_devices();
-void init_devices();
-uint16_t GPIO_handler();
-
-void sigio_handler(int signo);
-void play(void);
-void exit_main(void);
 
 int main(int argc, char *argv[])
 {		
@@ -42,6 +28,7 @@ int main(int argc, char *argv[])
 
 	init_devices();
 
+	//This could be put somewhere else, like in a init game function?
 	black_screen();
 	hits = 0;
 	hitGoal();
@@ -50,21 +37,19 @@ int main(int argc, char *argv[])
 	drawPointer(j);
 	drawPlatform(WIDTH/2 - 15);	
 
+	//Actual game playing
 	while (1)
 	{
 		__asm("wfi");
 	}
-	//exit and uninitialise in exit_main, called by SW8
-
+	//exit and uninitialise in exit_main, called by SW8, so DW about warnings about this
 
 }
 
 uint16_t GPIO_handler()
 {
 	uint16_t read_buf;
-
 	read(gpio_fd, &read_buf, sizeof(read_buf));
-
 	return (read_buf << 8); 
 }
 
@@ -105,88 +90,6 @@ void init_devices()
 void sigio_handler(int signo)
 {
 	play();
-
-}
-
-void play()
-{
-	struct Square square;
-	square.pos_x=WIDTH/2;
-	square.pos_y=HEIGHT-5;
-	square.direction=0;
-	square.moving = 0;
-	square.colour = Pink;
-
-	struct Square prev_square;
-	prev_square = square;
-	prev_square.colour = Black;
-
-	while(1)
-	{
-		buttons_pressed = GPIO_handler();
-
-		switch(buttons_pressed){
-
-			case LEFT_BUTTON:
-				j -= 5;
-				if (j <= 0) j = 1;
-				drawPointer(j);
-				break;
-
-			case RIGHT_BUTTON:
-				j += 5;
-				if (j >= 180) j = 179; 
-				drawPointer(j);
-				break;
-
-			case SHOOT_BUTTON:
-				square.direction = j;
-				square.moving = 1;
-				while(square.moving == 1)
-				{
-					prev_square.pos_x = square.pos_x;
-					prev_square.pos_y = square.pos_y;
-					square = moveSquare(square);
-
-					//Check if goal hit
-					if(screen[(int)square.pos_y * WIDTH + (int)square.pos_x] == Orange)
-					{
-						hitGoal();
-						drawSquare((int)prev_square.pos_x, (int)prev_square.pos_y, prev_square.colour);
-						//Put back to start position
-						square.moving = 0;
-						square.pos_x=WIDTH/2;
-						square.pos_y=HEIGHT-5;
-						drawSquare((int)square.pos_x, (int)square.pos_y, square.colour);
-					}
-
-					drawSquare((int)prev_square.pos_x, (int)prev_square.pos_y, prev_square.colour);
-					//printf("Drawing ball at %d %d \n", (int)prev_ball.pos_y, (int)prev_ball.pos_x);
-					drawSquare((int)square.pos_x, (int)square.pos_y, square.colour);
-					
-					//Check if top or bottom of screen reached
-					if (square.pos_y <= 0 || square.pos_y >= HEIGHT) {
-						drawSquare((int)prev_square.pos_x, (int)prev_square.pos_y, prev_square.colour);
-						//Put back to start position
-						square.moving = 0;
-						square.pos_x=WIDTH/2;
-						square.pos_y=HEIGHT-5;
-						drawSquare((int)square.pos_x, (int)square.pos_y, square.colour);
-
-					}
-				}
-				drawPointer(j);	
-				drawPlatform(WIDTH/2 - 15);
-				break;
-			
-			case END_BUTTON:
-				exit_main();
-				break;
-			
-			default:
-				break;		
-		}
-	}
 }
 
 void deinit_devices()
