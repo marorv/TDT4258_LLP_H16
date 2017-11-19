@@ -68,8 +68,12 @@ uint16_t *screen;
 int fd;
 
 int gpio_fd;
+FILE* device;
 struct stat sb;
 uint16_t read_buf;
+
+int j;
+uint16_t buttons_pressed;
 
 #endif
 
