@@ -16,10 +16,12 @@
 #include <linux/ioctl.h>
 
 #include "graphics.h"
+#include "efm32gg.h"
 
 #define LEFT_BUTTON 0xFE00
 #define RIGHT_BUTTON 0xFB00
 #define SHOOT_BUTTON 0xBF00
+#define END_BUTTON 0x7F00
 
 #define handle_error(msg) \
 	do { perror(msg); exit(EXIT_FAILURE); } while (0)
@@ -31,6 +33,7 @@ uint16_t GPIO_handler();
 
 void sigio_handler(int signo);
 void play(void);
+void exit_main(void);
 
 int main(int argc, char *argv[])
 {		
@@ -46,19 +49,13 @@ int main(int argc, char *argv[])
 	j = 90;
 	drawPointer(j);
 	drawPlatform(WIDTH/2 - 15);	
-	
-	/*
-	printf("Reading buttons\n");
-	buttons_pressed = GPIO_handler();
-	printf("Buttons: %x\n", buttons_pressed);
-	printf("done reading buttons\n");
-	*/
-	
-	while(1);
 
+	while (1)
+	{
+		__asm("wfi");
+	}
+	//exit and uninitialise in exit_main, called by SW8
 
-	deinit_devices();
-	exit(EXIT_SUCCESS);
 
 }
 
@@ -91,32 +88,22 @@ void init_devices()
 	   handle_error("mmap");
 
 	if (signal(SIGIO, &sigio_handler) == SIG_ERR) {
-        printf("Could not register signal handler.\n");
-        //return EXIT_FAILURE;
+    	handle_error("Could not register signal handler.\n");
     }
 
 	//fileno(device) gets the int that is the filedescriptor of the file stream pointer device
     if (fcntl(fileno(device), F_SETOWN, getpid()) == -1) {
-        printf("Could not set PID as owner.\n");
-        //return EXIT_FAILURE;
+    	handle_error("Could not set PID as owner.\n");
     }
     long oflags = fcntl(fileno(device), F_GETFL);
     if (fcntl(fileno(device), F_SETFL, oflags | FASYNC) == -1) {
-        printf("Could not set FASYNC flag.\n");
-        //return EXIT_FAILURE;
+    	handle_error("Could not set FASYNC flag.\n");
     }
     
 }
 
 void sigio_handler(int signo)
 {
-	/*
-	printf("Signal handler\n");
-	printf("Signal : %d\n", signo);
-	uint16_t buttons_pressed = GPIO_handler();
-	printf("Buttons: %x\n", buttons_pressed);
-	printf("sigio done\n");
-	*/
 	play();
 
 }
@@ -191,6 +178,11 @@ void play()
 				drawPointer(j);	
 				drawPlatform(WIDTH/2 - 15);
 				break;
+			
+			case END_BUTTON:
+				exit_main();
+				break;
+			
 			default:
 				break;		
 		}
@@ -202,4 +194,10 @@ void deinit_devices()
 	munmap(screen, FILESIZE);
 	close(fd);
 	fclose(device);	
+}
+
+void exit_main()
+{
+	deinit_devices();
+	exit(EXIT_SUCCESS);
 }
