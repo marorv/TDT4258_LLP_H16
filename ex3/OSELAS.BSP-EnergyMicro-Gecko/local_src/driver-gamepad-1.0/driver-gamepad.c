@@ -63,7 +63,7 @@ static struct file_operations game_fops = { 	//As in LDD3, ch3, p53
 //Interrupt handler
 irqreturn_t gpio_interrupt_handler(int irq, void* dev_id, struct pt_regs* regs)
 {
-    printk(KERN_ALERT "Handling GPIO interrupt\n");
+    //printk(KERN_ALERT "Handling GPIO interrupt\n");
     iowrite32(ioread32(GPIO_IF), GPIO_IFC);
     if (async_queue) {
         kill_fasync(&async_queue, SIGIO, POLL_IN);
@@ -140,7 +140,30 @@ static int __init gamepad_init(void)
 
 static void __exit gamepad_cleanup(void)
 {
-	 printk("Short life for a small module...\n");
+	printk("Exiting driver\n");
+
+    //Disable interrupts
+    iowrite32(0x0000, GPIO_IEN);
+
+    //Free interrupt lines
+    free_irq(GPIO_EVEN_IRQ_LINE, &gamepad_cdev);
+    free_irq(GPIO_ODD_IRQ_LINE, &gamepad_cdev);
+
+    //Release memory regions
+    release_mem_region(GPIO_PC_MODEL, 1);
+    release_mem_region(GPIO_PC_DIN, 1);
+    release_mem_region(GPIO_PC_DOUT, 1);
+
+
+    //Destroy device
+    device_destroy(cl, device_nr);
+    class_destroy(cl);
+    cdev_del(&gamepad_cdev);
+    
+    //Disallocate device numbers
+    unregister_chrdev_region(device_nr, DEV_NR_COUNT);
+
+    printk("Buh bye.\n");
 }
 
 
@@ -151,9 +174,9 @@ static int gamepad_open(struct inode *inode, struct file *filp){
 
 static unsigned long gamepad_read(struct file *filp, uint16_t *buff, size_t count, loff_t *offp)
 {
-       printk("Inside read \n");
-       uint32_t data = ioread32(GPIO_PC_DIN);
-       return copy_to_user(buff, &data, 1);
+   //printk("Inside read \n");
+   uint32_t data = ioread32(GPIO_PC_DIN);
+   return copy_to_user(buff, &data, 1);
 }
 
 static int gamepad_write(struct inode *inode, struct file *filp){

@@ -30,7 +30,7 @@ void init_devices();
 uint16_t GPIO_handler();
 
 void sigio_handler(int signo);
-void knappetrykk(void);
+void play(void);
 
 int main(int argc, char *argv[])
 {		
@@ -47,10 +47,12 @@ int main(int argc, char *argv[])
 	drawPointer(j);
 	drawPlatform(WIDTH/2 - 15);	
 	
+	/*
 	printf("Reading buttons\n");
 	buttons_pressed = GPIO_handler();
 	printf("Buttons: %x\n", buttons_pressed);
 	printf("done reading buttons\n");
+	*/
 	
 	while(1);
 
@@ -108,17 +110,19 @@ void init_devices()
 
 void sigio_handler(int signo)
 {
+	/*
 	printf("Signal handler\n");
 	printf("Signal : %d\n", signo);
 	uint16_t buttons_pressed = GPIO_handler();
 	printf("Buttons: %x\n", buttons_pressed);
 	printf("sigio done\n");
+	*/
+	play();
 
 }
 
-void knappetrykk()
+void play()
 {
-
 	struct Square square;
 	square.pos_x=WIDTH/2;
 	square.pos_y=HEIGHT-5;
