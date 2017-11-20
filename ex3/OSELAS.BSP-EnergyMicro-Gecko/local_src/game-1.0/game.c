@@ -12,20 +12,13 @@
 #include <inttypes.h> 	// for printing hex numbers
 #include <math.h>
 
-#include "graphics.h"
+#include <signal.h>
+#include <linux/ioctl.h>
 
-#define LEFT_BUTTON 0xFE00
-#define RIGHT_BUTTON 0xFB00
-#define SHOOT_BUTTON 0xBF00
+#include "graphics.h"
 
 #define handle_error(msg) \
 	do { perror(msg); exit(EXIT_FAILURE); } while (0)
-
-
-void deinit_devices();
-void init_devices();
-uint16_t GPIO_handler();
-
 
 int main(int argc, char *argv[])
 {		
@@ -34,108 +27,37 @@ int main(int argc, char *argv[])
 
 	init_devices();
 
+	//This could be put somewhere else, like in a init game function?
 	black_screen();
 	hits = 0;
 	hitGoal();
 
-	struct Square square;
-	square.pos_x=WIDTH/2;
-	square.pos_y=HEIGHT-5;
-	square.direction=0;
-	square.moving = 0;
-	square.colour = Pink;
-
-	struct Square prev_square;
-	prev_square = square;
-	prev_square.colour = Black;
-
-	int j;
 	j = 90;
 	drawPointer(j);
 	drawPlatform(WIDTH/2 - 15);	
 
-	uint16_t buttons_pressed;
-	while(1)
+	//Actual game playing
+	while (1)
 	{
-		buttons_pressed = GPIO_handler();
-
-		switch(buttons_pressed){
-
-			case LEFT_BUTTON:
-				j -= 5;
-				if (j <= 0) j = 1;
-				drawPointer(j);
-				break;
-
-			case RIGHT_BUTTON:
-				j += 5;
-				if (j >= 180) j = 179; 
-				drawPointer(j);
-				break;
-
-			case SHOOT_BUTTON:
-				square.direction = j;
-				square.moving = 1;
-				while(square.moving == 1)
-				{
-					prev_square.pos_x = square.pos_x;
-					prev_square.pos_y = square.pos_y;
-					square = moveSquare(square);
-
-					//Check if goal hit
-					if(screen[(int)square.pos_y * WIDTH + (int)square.pos_x] == Orange)
-					{
-						hitGoal();
-						drawSquare((int)prev_square.pos_x, (int)prev_square.pos_y, prev_square.colour);
-						//Put back to start position
-						square.moving = 0;
-						square.pos_x=WIDTH/2;
-						square.pos_y=HEIGHT-5;
-						drawSquare((int)square.pos_x, (int)square.pos_y, square.colour);
-					}
-
-					drawSquare((int)prev_square.pos_x, (int)prev_square.pos_y, prev_square.colour);
-					//printf("Drawing ball at %d %d \n", (int)prev_ball.pos_y, (int)prev_ball.pos_x);
-					drawSquare((int)square.pos_x, (int)square.pos_y, square.colour);
-					
-					//Check if top or bottom of screen reached
-					if (square.pos_y <= 0 || square.pos_y >= HEIGHT) {
-						drawSquare((int)prev_square.pos_x, (int)prev_square.pos_y, prev_square.colour);
-						//Put back to start position
-						square.moving = 0;
-						square.pos_x=WIDTH/2;
-						square.pos_y=HEIGHT-5;
-						drawSquare((int)square.pos_x, (int)square.pos_y, square.colour);
-
-					}
-				}
-				drawPointer(j);	
-				drawPlatform(WIDTH/2 - 15);
-				break;
-			default:
-				break;		
-		}
+		__asm("wfi");
 	}
-
-	deinit_devices();
-	exit(EXIT_SUCCESS);
+	//exit and uninitialise in exit_main, called by SW8, so DW about warnings about this
 
 }
 
 uint16_t GPIO_handler()
 {
 	uint16_t read_buf;
-
 	read(gpio_fd, &read_buf, sizeof(read_buf));
-
 	return (read_buf << 8); 
 }
 
 void init_devices()
 {
-	gpio_fd = open("/dev/GPIO_buttons", O_RDWR);
-	if (gpio_fd == -1)
+	device = fopen("/dev/GPIO_buttons", "rb");
+	if (!device)
 	   handle_error("open");
+	gpio_fd = fileno(device);
 
 	fd = open("/dev/fb0", O_RDWR);
 	if (fd == -1)
@@ -148,11 +70,36 @@ void init_devices()
 	screen = (uint16_t*)mmap(NULL, FILESIZE, PROT_READ, MAP_PRIVATE, fd, 0);
 	if (screen == MAP_FAILED)
 	   handle_error("mmap");
+
+	if (signal(SIGIO, &sigio_handler) == SIG_ERR) {
+    	handle_error("Could not register signal handler.\n");
+    }
+
+	//fileno(device) gets the int that is the filedescriptor of the file stream pointer device
+    if (fcntl(fileno(device), F_SETOWN, getpid()) == -1) {
+    	handle_error("Could not set PID as owner.\n");
+    }
+    long oflags = fcntl(fileno(device), F_GETFL);
+    if (fcntl(fileno(device), F_SETFL, oflags | FASYNC) == -1) {
+    	handle_error("Could not set FASYNC flag.\n");
+    }
+    
+}
+
+void sigio_handler(int signo)
+{
+	play();
 }
 
 void deinit_devices()
 {
 	munmap(screen, FILESIZE);
 	close(fd);
-	close(gpio_fd);	
+	fclose(device);	
+}
+
+void exit_main()
+{
+	deinit_devices();
+	exit(EXIT_SUCCESS);
 }

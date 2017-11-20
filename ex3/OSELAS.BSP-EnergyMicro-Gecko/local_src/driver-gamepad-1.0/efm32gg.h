@@ -1,5 +1,3 @@
-//#include <stdint.h>
-
 // GPIO
 
 #define GPIO_PA_BASE 0x40006000
@@ -41,7 +39,11 @@
 #define GPIO_EXTIRISE  ((volatile uint32_t*)(GPIO_PA_BASE + 0x108))
 #define GPIO_EXTIFALL  ((volatile uint32_t*)(GPIO_PA_BASE + 0x10c))
 #define GPIO_IEN       ((volatile uint32_t*)(GPIO_PA_BASE + 0x110))
+#define GPIO_IF 	   ((volatile uint32_t*)(GPIO_PA_BASE + 0x114))
 #define GPIO_IFC       ((volatile uint32_t*)(GPIO_PA_BASE + 0x11c))
+
+#define GPIO_EVEN_IRQ_LINE 17
+#define GPIO_ODD_IRQ_LINE 18
 
 // CMU
 
@@ -140,4 +142,3 @@
 #define SCR          ((volatile uint32_t*)0xe000ed10)
 #define SYSTICK_CTRL ((volatile uint32_t*)0xe000e010)
 #define SYSTICK_LOAD ((volatile uint32_t*)0xe000e014)
-
