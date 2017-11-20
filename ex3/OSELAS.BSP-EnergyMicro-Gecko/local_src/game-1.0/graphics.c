@@ -205,85 +205,90 @@ struct Square moveSquare(struct Square square)
 	return ret_square;
 }
 
-void play()
+void initGame() //Sets up game preliminaries on the screen
 {
-	//This probably doesn't have to happen every time play is called, make a init ball funciton?
-	struct Square square;
+	black_screen();
+	hits = 0;
+	hitGoal();
+
+	j = 90;
+	drawPointer(j);
+	drawPlatform(WIDTH/2 - 15);	
+
 	square.pos_x=WIDTH/2;
 	square.pos_y=HEIGHT-5;
 	square.direction=0;
 	square.moving = 0;
 	square.colour = Pink;
 
-	struct Square prev_square;
 	prev_square = square;
 	prev_square.colour = Black;
+}
 
-	while(1)
-	{
-		buttons_pressed = GPIO_handler();
+void play()
+{
+	buttons_pressed = GPIO_handler();
 
-		switch(buttons_pressed){
+	switch(buttons_pressed){
 
-			case LEFT_BUTTON:
-				j -= 5;
-				if (j <= 0) j = 1;
-				drawPointer(j);
-				break;
+		case LEFT_BUTTON:
+			j -= 5;
+			if (j <= 0) j = 1;
+			drawPointer(j);
+			break;
 
-			case RIGHT_BUTTON:
-				j += 5;
-				if (j >= 180) j = 179; 
-				drawPointer(j);
-				break;
+		case RIGHT_BUTTON:
+			j += 5;
+			if (j >= 180) j = 179; 
+			drawPointer(j);
+			break;
 
-			case SHOOT_BUTTON:
-				square.direction = j;
-				square.moving = 1;
-				while(square.moving == 1)
+		case SHOOT_BUTTON:
+			square.direction = j;
+			square.moving = 1;
+			while(square.moving == 1)
+			{
+				prev_square.pos_x = square.pos_x;
+				prev_square.pos_y = square.pos_y;
+				square = moveSquare(square);
+
+				//Check if goal hit
+				if(screen[(int)square.pos_y * WIDTH + (int)square.pos_x] == Orange)
 				{
-					prev_square.pos_x = square.pos_x;
-					prev_square.pos_y = square.pos_y;
-					square = moveSquare(square);
-
-					//Check if goal hit
-					if(screen[(int)square.pos_y * WIDTH + (int)square.pos_x] == Orange)
-					{
-						hitGoal();
-						drawSquare((int)prev_square.pos_x, (int)prev_square.pos_y, prev_square.colour);
-						//Put back to start position
-						square.moving = 0;
-						square.pos_x=WIDTH/2;
-						square.pos_y=HEIGHT-5;
-						drawSquare((int)square.pos_x, (int)square.pos_y, square.colour);
-					}
-
+					hitGoal();
 					drawSquare((int)prev_square.pos_x, (int)prev_square.pos_y, prev_square.colour);
-					//printf("Drawing ball at %d %d \n", (int)prev_ball.pos_y, (int)prev_ball.pos_x);
+					//Put back to start position
+					square.moving = 0;
+					square.pos_x=WIDTH/2;
+					square.pos_y=HEIGHT-5;
 					drawSquare((int)square.pos_x, (int)square.pos_y, square.colour);
-					
-					//Check if top or bottom of screen reached
-					if (square.pos_y <= 0 || square.pos_y >= HEIGHT) {
-						drawSquare((int)prev_square.pos_x, (int)prev_square.pos_y, prev_square.colour);
-						//Put back to start position
-						square.moving = 0;
-						square.pos_x=WIDTH/2;
-						square.pos_y=HEIGHT-5;
-						drawSquare((int)square.pos_x, (int)square.pos_y, square.colour);
-
-					}
 				}
-				drawPointer(j);	
-				drawPlatform(WIDTH/2 - 15);
-				break;
-			
-			case END_BUTTON:
-				printf("Ending game. Bye!\n");
-				exit_main();
-				break;
-			
-			default:
-				break;		
-		}
+
+				drawSquare((int)prev_square.pos_x, (int)prev_square.pos_y, prev_square.colour);
+				//printf("Drawing ball at %d %d \n", (int)prev_ball.pos_y, (int)prev_ball.pos_x);
+				drawSquare((int)square.pos_x, (int)square.pos_y, square.colour);
+				
+				//Check if top or bottom of screen reached
+				if (square.pos_y <= 0 || square.pos_y >= HEIGHT) {
+					drawSquare((int)prev_square.pos_x, (int)prev_square.pos_y, prev_square.colour);
+					//Put back to start position
+					square.moving = 0;
+					square.pos_x=WIDTH/2;
+					square.pos_y=HEIGHT-5;
+					drawSquare((int)square.pos_x, (int)square.pos_y, square.colour);
+
+				}
+			}
+			drawPointer(j);	
+			drawPlatform(WIDTH/2 - 15);
+			break;
+		
+		case END_BUTTON:
+			printf("Ending game. Bye!\n");
+			exit_main();
+			break;
+		
+		default:
+			break;		
 	}
 }

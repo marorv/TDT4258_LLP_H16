@@ -72,20 +72,20 @@ static int __init gamepad_init(void)
     result = alloc_chrdev_region(&device_nr, 0, DEV_NR_COUNT, DRIVER_NAME);
 
     if (result < 0) {
-        printk(KERN_ALERT "Failed to allocate device numbers\n");
+        printk(KERN_ALERT "Could not allocate device numbers\n");
         return -1;
     }
 
     if (request_mem_region(GPIO_PC_MODEL, 1, DRIVER_NAME) == NULL ) {
-        printk(KERN_ALERT "Error requesting GPIO_PC_MODEL memory region, already in use?\n");
+        printk(KERN_ALERT "Could not request GPIO_PC_MODEL memory region. Is it in use?\n");
         return -1;
     }
     if (request_mem_region(GPIO_PC_DOUT, 1, DRIVER_NAME) == NULL ) {
-        printk(KERN_ALERT "Error requesting GPIO_PC_DOUT memory region, already in use?\n");
+        printk(KERN_ALERT "Could not request GPIO_PC_DOUT memory region. Is it in use?\n");
         return -1;
     }
     if (request_mem_region(GPIO_PC_DIN, 1, DRIVER_NAME) == NULL ) {
-        printk(KERN_ALERT "Error requesting GPIO_PC_DIN memory region, already in use?\n");
+        printk(KERN_ALERT "Could not request GPIO_PC_DIN memory region. Is it in use?\n");
         return -1;
     }
 
@@ -148,7 +148,7 @@ static void __exit gamepad_cleanup(void)
 
 
 static int gamepad_open(struct inode *inode, struct file *filp){
-    printk(KERN_INFO "open");
+    printk(KERN_INFO "open\n");
     return 0;
 }
 
@@ -160,12 +160,12 @@ static unsigned long gamepad_read(struct file *filp, uint16_t *buff, size_t coun
 }
 
 static int gamepad_write(struct inode *inode, struct file *filp){
-    printk(KERN_INFO "write");
+    printk(KERN_INFO "write\n");
     return 0;
 }
 
 static int gamepad_release(struct inode *inode, struct file *filp){
-    printk(KERN_INFO "release");
+    printk(KERN_INFO "release\n");
     return 0;
 }
 

@@ -82,10 +82,14 @@ void init_devices();
 uint16_t GPIO_handler();
 
 void sigio_handler(int signo);
+void initGame(void);
 void play(void);
 void exit_main(void);
 
 int j;
 uint16_t buttons_pressed;
+
+struct Square square;
+struct Square prev_square;
 
 #endif

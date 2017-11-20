@@ -22,19 +22,10 @@
 
 int main(int argc, char *argv[])
 {		
-
-	printf("Hello World, I'm game!\n");
+	printf("Welcome to Bubble Shooter!\n");
 
 	init_devices();
-
-	//This could be put somewhere else, like in a init game function?
-	black_screen();
-	hits = 0;
-	hitGoal();
-
-	j = 90;
-	drawPointer(j);
-	drawPlatform(WIDTH/2 - 15);	
+	initGame();
 
 	//Actual game playing
 	while (1)
@@ -71,7 +62,7 @@ void init_devices()
 	if (screen == MAP_FAILED)
 	   handle_error("mmap");
 
-	if (signal(SIGIO, &sigio_handler) == SIG_ERR) {
+	if (signal(SIGIO, &play) == SIG_ERR) {
     	handle_error("Could not register signal handler.\n");
     }
 
@@ -84,11 +75,6 @@ void init_devices()
     	handle_error("Could not set FASYNC flag.\n");
     }
     
-}
-
-void sigio_handler(int signo)
-{
-	play();
 }
 
 void deinit_devices()
